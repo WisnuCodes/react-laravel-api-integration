@@ -1,78 +1,112 @@
 # React Laravel API Integration
 
-Aplikasi frontend React yang terhubung ke backend Laravel REST API. Dibuat menggunakan Vite sebagai build tool dan Material UI untuk komponen antarmuka.
+A frontend application built with **React** and **Vite** that integrates with a **Laravel REST API**. The application demonstrates user authentication, protected routes, user management, and product catalog features while following a modern component-based architecture.
+
+---
+
+## Overview
+
+This project serves as the frontend client for a Laravel REST API. It communicates with the backend using Axios, manages authentication through Laravel Sanctum, and provides a responsive user interface built with Material UI.
+
+---
+
+## Features
+
+* User authentication with Laravel Sanctum
+* Login and registration
+* Automatic login after successful registration
+* Protected routes for authenticated users
+* User list with pagination
+* User detail page
+* Product catalog
+* Automatic token management using Axios Interceptors
+* Global authentication state using React Context API
+* Responsive user interface with Material UI
+
+---
 
 ## Tech Stack
 
-| Library | Fungsi |
-| :--- | :--- |
-| React | Library utama untuk UI |
-| React Router DOM | Navigasi halaman (SPA) |
-| Material UI (MUI) | Komponen UI siap pakai |
-| Emotion | Styling engine untuk MUI |
-| Axios | HTTP client untuk request API |
-| Vite | Build tool & dev server |
-| ESLint | Linting & code quality |
+| Technology        | Description                            |
+| ----------------- | -------------------------------------- |
+| React             | Frontend library                       |
+| Vite              | Build tool and development server      |
+| React Router DOM  | Client-side routing                    |
+| Material UI       | UI component library                   |
+| Emotion           | Styling engine for Material UI         |
+| Axios             | HTTP client for REST API communication |
+| React Context API | Global authentication state management |
+| ESLint            | Code linting and quality assurance     |
 
-## Cara Menjalankan
+---
+
+## Installation
+
+Clone the repository:
 
 ```bash
-# install dependencies
-npm install
+git clone https://github.com/WisnuCodes/react-laravel-api-integration.git
+cd react-laravel-api-integration
+```
 
-# jalankan dev server
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-Pastikan backend Laravel sudah berjalan di `http://localhost:8000` sebelum mengakses aplikasi.
+The application will be available at:
 
-## Fitur
-
-- **Login & Register** — autentikasi menggunakan token dari Laravel Sanctum
-- **Halaman Users** — menampilkan daftar user dengan pagination
-- **Detail User** — info lengkap user (role, saldo, tanggal daftar)
-- **Katalog Produk** — list produk dari API, tampil dalam card grid
-- **Protected Route** — halaman tertentu hanya bisa diakses setelah login
-- **Auto-login** — setelah register, langsung masuk tanpa perlu login ulang
-
-## Struktur Folder
-
+```text
+http://localhost:5173
 ```
-src/
-├── api/
-│   └── client.ts          # axios instance + interceptor token
-├── components/
-│   └── Navbar.tsx         # navigasi utama
-├── context/
-│   └── AuthContext.tsx    # global state untuk auth
-├── pages/
-│   ├── Login.tsx
-│   ├── Register.tsx
-│   ├── Users.tsx
-│   ├── UserDetail.tsx
-│   └── Products.tsx
-└── App.tsx                # routing & layout
-```
+
+Before running the frontend application, ensure that the Laravel backend is running at `http://localhost:8000`.
+
+---
 
 ## API Endpoints
 
-Endpoint yang dipakai dari backend Laravel:
+| Method | Endpoint          | Description                   |
+| ------ | ----------------- | ----------------------------- |
+| POST   | `/api/login`      | Authenticate a user           |
+| POST   | `/api/register`   | Register a new user           |
+| POST   | `/api/logout`     | Logout the authenticated user |
+| GET    | `/api/users`      | Retrieve all users            |
+| GET    | `/api/users/{id}` | Retrieve user details         |
+| GET    | `/api/products`   | Retrieve product catalog      |
 
-| Method | Endpoint | Keterangan |
-| :--- | :--- | :--- |
-| POST | `/api/login` | Login, dapat token |
-| POST | `/api/register` | Register user baru |
-| POST | `/api/logout` | Logout (perlu token) |
-| GET | `/api/users` | Ambil semua user (perlu token) |
-| GET | `/api/users/{id}` | Detail user (perlu token) |
-| GET | `/api/products` | Ambil semua produk |
+---
 
-## Catatan
+## Repositories
 
-- Semua request API yang butuh autentikasi sudah otomatis menyertakan token lewat Axios interceptor di `api/client.ts`
-- Styling menggunakan pendekatan component-based lewat Material UI, bukan CSS global
-- State autentikasi dikelola secara global pakai React Context (`AuthContext`)
+### Frontend
 
-## Repository
+* https://github.com/WisnuCodes/react-laravel-api-integration
 
-[https://github.com/WisnuCodes/react-laravel-api-integration](https://github.com/WisnuCodes/react-laravel-api-integration)
+### Backend
+
+* https://github.com/WisnuCodes/order-management-api
+
+---
+
+## Notes
+
+* Authentication is implemented using Laravel Sanctum.
+* Access tokens are automatically attached to authenticated requests using Axios Interceptors.
+* Authentication state is managed globally with React Context API.
+* The project follows a reusable, component-based architecture for better scalability and maintainability.
+
+---
+
+## Author
+
+**Wisnu Nugraha**
+
+GitHub: https://github.com/WisnuCodes

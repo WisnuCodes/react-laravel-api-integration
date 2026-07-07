@@ -73,14 +73,6 @@ Seluruh *source code* tersimpan dan dikelola secara aman menggunakan Git dan Git
 > [**https://github.com/WisnuCodes/react-laravel-api-integration**](https://github.com/WisnuCodes/react-laravel-api-integration)
 *(Catatan: Silakan sesuaikan/perbarui link di atas jika repositori Anda berada di URL yang berbeda)*
 
-### 📝 Contoh Standar Commit Log
-Demi menjaga kualitas riwayat pengembangan, *repository* menggunakan pendekatan *Semantic Commit Messages*:
-- `feat: integrasi sistem otentikasi (login & register) via Laravel API`
-- `feat: pembuatan context untuk manajemen global state user`
-- `style: perombakan antarmuka menjadi component-based menggunakan Material UI`
-- `feat: konsumsi API product listing dan integrasi ke UI katalog`
-- `docs: penyempurnaan file README dan dokumentasi fitur aplikasi`
-
 <br />
 
 <div align="center">

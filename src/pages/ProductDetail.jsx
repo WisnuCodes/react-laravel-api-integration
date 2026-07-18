@@ -108,7 +108,7 @@ export default function ProductDetail() {
   const hasReviewed = reviews.some(r => r.buyer_id === user?.user_id);
 
   const library = libraryRes?.data || libraryRes || [];
-  const purchasedItem = library.find(item => item.product_id === product?.id || item.product_id === product?.product_id);
+  const purchasedItem = library.find(item => item.id === (product?.id || product?.product_id));
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>

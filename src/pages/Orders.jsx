@@ -4,11 +4,13 @@ import {
   Container, Typography, Box, CircularProgress, Alert,
   Paper, Chip, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, IconButton, Tooltip, Dialog, DialogTitle,
-  DialogContent, DialogActions, Button, TextField, MenuItem
+  DialogContent, DialogActions, Button, TextField, MenuItem,
+  Card, CardContent
 } from '@mui/material';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import AddIcon from '@mui/icons-material/Add';
+import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import { useFetch } from '../hooks/useFetch';
 import { useAuth } from '../context/AuthContext';
 import { apiRequest } from '../api/client';
@@ -31,9 +33,9 @@ export default function Orders() {
     : [];
 
   const statusConfig = {
-    pending: { label: 'Menunggu', color: 'warning' },
-    success: { label: 'Berhasil', color: 'success' },
-    failed: { label: 'Gagal', color: 'error' },
+    pending: { label: 'Menunggu', color: '#F59E0B', bg: '#FEF3C7', border: '#FDE68A' },
+    success: { label: 'Berhasil', color: '#10B981', bg: '#D1FAE5', border: '#A7F3D0' },
+    failed: { label: 'Gagal', color: '#EF4444', bg: '#FEE2E2', border: '#FECACA' },
   };
 
   const handleCreateOrder = async () => {
@@ -71,273 +73,274 @@ export default function Orders() {
 
   if (loading) {
     return (
-      <Container maxWidth="lg" sx={{ py: 10, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-        <CircularProgress sx={{ color: '#000000' }} />
-      </Container>
+      <Box sx={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', py: 12, bgcolor: '#F9FAFB' }}>
+        <CircularProgress sx={{ color: '#111827' }} />
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Alert severity="error">{error}</Alert>
-      </Container>
+      <Box sx={{ minHeight: '100vh', py: 8, bgcolor: '#F9FAFB' }}>
+        <Container maxWidth="lg">
+          <Alert severity="error" sx={{ borderRadius: '12px' }}>{error}</Alert>
+        </Container>
+      </Box>
     );
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#F9FAFB', py: { xs: 4, md: 8 } }}>
+      <Container maxWidth="lg">
+        {/* Header Section */}
+        <Box sx={{ mb: 6, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { xs: 'flex-start', md: 'center' }, justifyContent: 'space-between', gap: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ width: 48, height: 48, borderRadius: '12px', bgcolor: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <ReceiptLongOutlinedIcon sx={{ color: '#ffffff' }} />
+            </Box>
+            <Box>
+              <Typography variant="h4" fontWeight={800} color="#111827" letterSpacing="-0.02em">
+                Pesanan Saya
+              </Typography>
+              <Typography variant="body2" color="#6B7280">
+                Lacak dan kelola riwayat transaksi Anda.
+              </Typography>
+            </Box>
+          </Box>
 
-      {/* Header */}
-      <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
-        <Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
-            <ShoppingCartIcon sx={{ fontSize: 40, color: '#000000' }} />
-            <Typography
-              variant="h3"
-              component="h1"
-              fontWeight="bold"
+          {user?.role === 'buyer' && (
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => setOpenDialog(true)}
+              disableElevation
               sx={{
-                color: '#000000',
-                fontSize: { xs: '1.8rem', md: '2.5rem' },
-                letterSpacing: '-0.025em',
+                bgcolor: '#111827',
+                color: '#ffffff',
+                textTransform: 'none',
+                fontWeight: 600,
+                borderRadius: '99px',
+                px: 3, py: 1,
+                '&:hover': { bgcolor: '#000000' },
               }}
             >
-              Pesanan Saya
-            </Typography>
-          </Box>
-          <Typography variant="h6" sx={{ color: '#6b7280', fontSize: { xs: '0.95rem', md: '1.15rem' } }}>
-            Riwayat semua pesanan yang pernah Anda buat
-          </Typography>
+              Buat Pesanan
+            </Button>
+          )}
         </Box>
 
-        {user?.role === 'buyer' && (
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => setOpenDialog(true)}
+        {/* Orders Table */}
+        {myOrders.length === 0 ? (
+          <Box sx={{ textAlign: 'center', py: 12, bgcolor: '#ffffff', borderRadius: '24px', border: '1px dashed #E5E7EB' }}>
+            <ShoppingCartOutlinedIcon sx={{ fontSize: 48, color: '#D1D5DB', mb: 2 }} />
+            <Typography variant="h6" color="#4B5563" fontWeight={600} mb={1}>Belum ada pesanan</Typography>
+            <Typography variant="body2" color="#9CA3AF">Anda belum melakukan transaksi apapun di platform ini.</Typography>
+          </Box>
+        ) : (
+          <Card 
+            elevation={0}
             sx={{
-              bgcolor: '#000000',
-              textTransform: 'none',
-              fontWeight: 600,
-              borderRadius: 2,
-              px: 3,
-              '&:hover': { bgcolor: '#333333' },
+              borderRadius: '24px',
+              border: '1px solid #E5E7EB',
+              bgcolor: '#ffffff',
+              overflow: 'hidden'
             }}
           >
-            Buat Pesanan
-          </Button>
-        )}
-      </Box>
-
-      {/* Orders Table */}
-      {myOrders.length === 0 ? (
-        <Paper
-          elevation={0}
-          sx={{
-            borderRadius: 3,
-            border: '1px solid',
-            borderColor: 'divider',
-            py: 8,
-            textAlign: 'center',
-          }}
-        >
-          <ShoppingCartIcon sx={{ fontSize: 48, color: '#d1d5db', mb: 2 }} />
-          <Typography sx={{ color: '#6b7280' }}>Belum ada pesanan.</Typography>
-        </Paper>
-      ) : (
-        <TableContainer
-          component={Paper}
-          elevation={0}
-          sx={{
-            borderRadius: 3,
-            border: '1px solid',
-            borderColor: 'divider',
-          }}
-        >
-          <Table sx={{ minWidth: 650 }}>
-            <TableHead>
-              <TableRow sx={{ bgcolor: 'grey.50' }}>
-                <TableCell sx={{ fontWeight: 700, color: '#6b7280', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Produk
-                </TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#6b7280', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }} align="right">
-                  Harga
-                </TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#6b7280', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }} align="right">
-                  Jumlah
-                </TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#6b7280', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }} align="center">
-                  Status
-                </TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#6b7280', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Tanggal
-                </TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#6b7280', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }} align="center">
-                  Aksi
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {myOrders.map((order) => {
-                const status = statusConfig[order.payment_status] || statusConfig.pending;
-                return (
-                  <TableRow
-                    key={order.id}
-                    sx={{
-                      transition: 'background-color 0.2s',
-                      '&:hover': { bgcolor: 'action.hover' },
-                      '&:last-child td': { borderBottom: 0 },
-                    }}
-                  >
-                    <TableCell>
-                      <Typography variant="subtitle2" fontWeight="bold">
-                        {order.product?.title || '-'}
-                      </Typography>
+            <TableContainer>
+              <Table sx={{ minWidth: 700 }}>
+                <TableHead>
+                  <TableRow sx={{ bgcolor: '#F9FAFB' }}>
+                    <TableCell sx={{ color: '#6B7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #E5E7EB', py: 2 }}>
+                      No. Transaksi
                     </TableCell>
-                    <TableCell align="right">
-                      <Typography variant="body2">
-                        Rp {Number(order.product?.price || 0).toLocaleString('id-ID')}
-                      </Typography>
+                    <TableCell sx={{ color: '#6B7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #E5E7EB', py: 2 }}>
+                      Produk
                     </TableCell>
-                    <TableCell align="right">
-                      <Typography variant="body2" fontWeight={600}>
-                        Rp {Number(order.amount || 0).toLocaleString('id-ID')}
-                      </Typography>
+                    <TableCell align="right" sx={{ color: '#6B7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #E5E7EB', py: 2 }}>
+                      Nominal
                     </TableCell>
-                    <TableCell align="center">
-                      <Chip
-                        label={status.label}
-                        color={status.color}
-                        size="small"
-                        variant="outlined"
-                        sx={{ fontWeight: 600, borderRadius: 2 }}
-                      />
+                    <TableCell align="center" sx={{ color: '#6B7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #E5E7EB', py: 2 }}>
+                      Status
                     </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="text.secondary">
-                        {new Date(order.created_at).toLocaleDateString('id-ID', {
-                          day: 'numeric', month: 'short', year: 'numeric'
-                        })}
-                      </Typography>
+                    <TableCell align="right" sx={{ color: '#6B7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #E5E7EB', py: 2 }}>
+                      Tanggal
                     </TableCell>
-                    <TableCell align="center">
-                      {order.product?.id && (
-                        <Tooltip title="Lihat Produk" arrow>
-                          <IconButton
-                            component={Link}
-                            to={`/products/${order.product.id}`}
-                            size="small"
-                            sx={{
-                              bgcolor: '#f3f4f6',
-                              '&:hover': { bgcolor: '#e5e7eb' },
-                            }}
-                          >
-                            <VisibilityIcon fontSize="small" sx={{ color: '#000000' }} />
-                          </IconButton>
-                        </Tooltip>
-                      )}
+                    <TableCell align="center" sx={{ color: '#6B7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #E5E7EB', py: 2 }}>
+                      Detail
                     </TableCell>
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+                </TableHead>
+                <TableBody>
+                  {myOrders.map((order) => {
+                    const status = statusConfig[order.payment_status] || statusConfig.pending;
+                    return (
+                      <TableRow
+                        key={order.id}
+                        sx={{
+                          transition: 'all 0.2s',
+                          '&:hover': { bgcolor: '#F9FAFB' },
+                          '& td': { borderBottom: '1px solid #F3F4F6' },
+                          '&:last-child td': { borderBottom: 'none' }
+                        }}
+                      >
+                        <TableCell>
+                          <Typography variant="body2" fontWeight={600} color="#111827">
+                            #{order.id}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2" fontWeight={500} color="#374151">
+                            {order.product?.title || '-'}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Typography variant="body2" fontWeight={600} color="#111827">
+                            Rp {Number(order.amount || 0).toLocaleString('id-ID')}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Box
+                            sx={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              px: 1.5, py: 0.5,
+                              borderRadius: '99px',
+                              bgcolor: status.bg,
+                              color: status.color,
+                              border: `1px solid ${status.border}`,
+                              fontSize: '0.75rem',
+                              fontWeight: 700
+                            }}
+                          >
+                            {status.label}
+                          </Box>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Typography variant="body2" color="#6B7280">
+                            {new Date(order.created_at).toLocaleDateString('id-ID', {
+                              day: 'numeric', month: 'short', year: 'numeric'
+                            })}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="center">
+                          {order.product?.id && (
+                            <Tooltip title="Lihat Produk" arrow>
+                              <IconButton
+                                component={Link}
+                                to={`/products/${order.product.id}`}
+                                size="small"
+                                sx={{
+                                  border: '1px solid #E5E7EB',
+                                  bgcolor: '#ffffff',
+                                  '&:hover': { bgcolor: '#F3F4F6' },
+                                }}
+                              >
+                                <VisibilityOutlinedIcon fontSize="small" sx={{ color: '#4B5563' }} />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Card>
+        )}
 
-      {/* Create Order Dialog */}
-      <Dialog
-        open={openDialog}
-        onClose={() => { setOpenDialog(false); setSubmitError(''); setSubmitSuccess(''); }}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{ 
-          sx: { 
-            borderRadius: '20px',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-          } 
-        }}
-      >
-        <DialogTitle sx={{ 
-          fontWeight: 800, 
-          pb: 2, pt: 3, px: 4,
-          fontSize: '1.5rem',
-          color: '#111827',
-          borderBottom: '1px solid #f3f4f6'
-        }}>
-          Buat Pesanan Baru
-        </DialogTitle>
-        <DialogContent sx={{ p: 4 }}>
-          {submitError && <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>{submitError}</Alert>}
-          {submitSuccess && <Alert severity="success" sx={{ mb: 3, borderRadius: 2 }}>{submitSuccess}</Alert>}
+        {/* Create Order Dialog */}
+        <Dialog
+          open={openDialog}
+          onClose={() => { setOpenDialog(false); setSubmitError(''); setSubmitSuccess(''); }}
+          maxWidth="sm"
+          fullWidth
+          PaperProps={{ 
+            sx: { 
+              borderRadius: '24px',
+              p: 1
+            } 
+          }}
+        >
+          <DialogTitle sx={{ 
+            fontWeight: 800, 
+            pb: 1, pt: 3, px: 3,
+            fontSize: '1.5rem',
+            color: '#111827'
+          }}>
+            Buat Pesanan Baru
+          </DialogTitle>
+          <DialogContent sx={{ p: 3 }}>
+            {submitError && <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>{submitError}</Alert>}
+            {submitSuccess && <Alert severity="success" sx={{ mb: 3, borderRadius: '12px' }}>{submitSuccess}</Alert>}
 
-          <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, mt: 1 }}>
-            <TextField
-              select
-              fullWidth
-              label="Pilih Produk yang Ingin Dibeli"
-              value={selectedProduct}
-              onChange={(e) => {
-                setSelectedProduct(e.target.value);
-                const p = products.find(p => p.id === Number(e.target.value));
-                if (p) setAmount(String(p.price));
+            <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
+              <TextField
+                select
+                fullWidth
+                label="Pilih Produk"
+                value={selectedProduct}
+                onChange={(e) => {
+                  setSelectedProduct(e.target.value);
+                  const p = products.find(p => p.id === Number(e.target.value));
+                  if (p) setAmount(String(p.price));
+                }}
+                InputProps={{ sx: { borderRadius: '12px' } }}
+              >
+                {products.map((p) => (
+                  <MenuItem key={p.id} value={p.id} sx={{ py: 1.5 }}>
+                    <Box>
+                      <Typography variant="body2" fontWeight={600}>{p.title}</Typography>
+                      <Typography variant="caption" color="text.secondary">Rp {Number(p.price).toLocaleString('id-ID')}</Typography>
+                    </Box>
+                  </MenuItem>
+                ))}
+              </TextField>
+
+              <TextField
+                fullWidth
+                label="Nominal Transaksi (Rp)"
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                InputProps={{ sx: { borderRadius: '12px' } }}
+              />
+            </Box>
+          </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 3, pt: 0, gap: 1 }}>
+            <Button
+              onClick={() => { setOpenDialog(false); setSubmitError(''); setSubmitSuccess(''); }}
+              sx={{ 
+                textTransform: 'none', 
+                color: '#6B7280',
+                fontWeight: 600,
+                px: 3, py: 1,
+                borderRadius: '99px'
               }}
-              InputProps={{ sx: { borderRadius: '12px' } }}
             >
-              {products.map((p) => (
-                <MenuItem key={p.id} value={p.id} sx={{ py: 1.5 }}>
-                  <Box>
-                    <Typography variant="body1" fontWeight={600}>{p.title}</Typography>
-                    <Typography variant="body2" color="text.secondary">Rp {Number(p.price).toLocaleString('id-ID')}</Typography>
-                  </Box>
-                </MenuItem>
-              ))}
-            </TextField>
-
-            <TextField
-              fullWidth
-              label="Total yang Harus Dibayar (Rp)"
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              InputProps={{ sx: { borderRadius: '12px' } }}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions sx={{ px: 4, pb: 4, pt: 1, gap: 1 }}>
-          <Button
-            onClick={() => { setOpenDialog(false); setSubmitError(''); setSubmitSuccess(''); }}
-            sx={{ 
-              textTransform: 'none', 
-              color: '#4b5563',
-              fontWeight: 600,
-              px: 3, py: 1,
-              borderRadius: '10px'
-            }}
-          >
-            Batal
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleCreateOrder}
-            disabled={submitLoading || !selectedProduct || !amount}
-            sx={{
-              bgcolor: '#000000',
-              color: '#ffffff',
-              textTransform: 'none',
-              fontWeight: 600,
-              px: 4, py: 1.2,
-              borderRadius: '10px',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-              '&:hover': { bgcolor: '#111827', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' },
-              '&.Mui-disabled': { bgcolor: '#e5e7eb', color: '#9ca3af' }
-            }}
-          >
-            {submitLoading ? 'Memproses...' : 'Buat Pesanan Sekarang'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+              Batal
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleCreateOrder}
+              disabled={submitLoading || !selectedProduct || !amount}
+              disableElevation
+              sx={{
+                bgcolor: '#111827',
+                color: '#ffffff',
+                textTransform: 'none',
+                fontWeight: 600,
+                px: 4, py: 1.2,
+                borderRadius: '99px',
+                '&:hover': { bgcolor: '#000000' },
+                '&.Mui-disabled': { bgcolor: '#F3F4F6', color: '#9CA3AF' }
+              }}
+            >
+              {submitLoading ? 'Memproses...' : 'Buat Pesanan'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+    </Box>
   );
 }

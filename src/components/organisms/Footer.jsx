@@ -4,7 +4,6 @@ import {
   Box, Container, Typography, Stack, IconButton, 
   Dialog, Button, Avatar, Grid, Divider, TextField
 } from '@mui/material';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import SendIcon from '@mui/icons-material/Send';
 
 export default function Footer() {
@@ -25,37 +24,41 @@ export default function Footer() {
           mt: 'auto',
           bgcolor: '#FAFAFA',
           color: '#4B5563',
-          pt: { xs: 8, md: 10 },
-          pb: 4,
+          pt: { xs: 5, md: 10 },
+          pb: { xs: 10, md: 4 }, // Safely clears BottomNav (approx 65px) on mobile without being too large
           borderTop: '1px solid #E5E7EB',
         }}
       >
-        <Container maxWidth="lg" sx={{ px: { xs: 3, md: 4 } }}>
-          <Grid container spacing={6} sx={{ mb: 8 }}>
+        <Container maxWidth="lg" sx={{ px: { xs: 2.5, md: 4 } }}>
+          <Grid container spacing={{ xs: 3, md: 6 }} sx={{ mb: { xs: 3, md: 8 } }}>
             {/* Brand & Newsletter Section */}
             <Grid item xs={12} md={5}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
-                <Box sx={{ width: 36, height: 36, borderRadius: '10px', bgcolor: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-                  <AutoAwesomeIcon fontSize="small" sx={{ color: '#ffffff' }} />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: { xs: 2, md: 3 } }}>
+                <Box sx={{ width: { xs: 28, md: 36 }, height: { xs: 28, md: 36 }, borderRadius: '8px', bgcolor: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '60%', height: '60%' }}>
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                  </svg>
                 </Box>
                 <Typography 
                   variant="h5" 
                   fontWeight={800} 
                   component={Link}
                   to="/"
-                  sx={{ letterSpacing: '-0.04em', textDecoration: 'none', color: '#111827' }}
+                  sx={{ letterSpacing: '-0.04em', textDecoration: 'none', color: '#111827', fontSize: { xs: '1.25rem', md: '1.5rem' } }}
                 >
                   Dibitech
                 </Typography>
               </Box>
-              <Typography variant="body2" sx={{ color: '#6B7280', lineHeight: 1.7, mb: 4, maxWidth: 360, fontSize: '0.95rem' }}>
+              <Typography variant="body2" sx={{ color: '#6B7280', lineHeight: 1.6, mb: { xs: 3, md: 4 }, maxWidth: 360, fontSize: { xs: '0.8rem', md: '0.95rem' } }}>
                 Platform e-commerce modern untuk membeli dan menjual aset digital berkualitas dengan aman, cepat, dan mudah.
               </Typography>
               
               {/* Premium Newsletter Box */}
               <Box sx={{ display: 'flex', gap: 1, maxWidth: 360 }}>
                 <TextField
-                  placeholder="Masukkan email Anda"
+                  placeholder="Masukkan email"
                   size="small"
                   fullWidth
                   variant="outlined"
@@ -64,6 +67,7 @@ export default function Footer() {
                       color: '#111827',
                       bgcolor: '#ffffff',
                       borderRadius: '8px',
+                      fontSize: { xs: '0.85rem', md: '1rem' },
                       '& fieldset': { borderColor: '#E5E7EB' },
                       '&:hover fieldset': { borderColor: '#D1D5DB' },
                       '&.Mui-focused fieldset': { borderColor: '#111827', borderWidth: '1px' },
@@ -77,13 +81,13 @@ export default function Footer() {
                   sx={{
                     bgcolor: '#111827',
                     color: '#ffffff',
-                    minWidth: '48px',
+                    minWidth: { xs: '40px', md: '48px' },
                     borderRadius: '8px',
                     p: 0,
                     '&:hover': { bgcolor: '#1F2937' }
                   }}
                 >
-                  <SendIcon sx={{ fontSize: 18 }} />
+                  <SendIcon sx={{ fontSize: { xs: 16, md: 18 } }} />
                 </Button>
               </Box>
             </Grid>
@@ -92,17 +96,17 @@ export default function Footer() {
 
             {/* Links Section 1 */}
             <Grid item xs={6} md={3}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#111827', mb: 3, letterSpacing: '0.05em', fontSize: '0.85rem' }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#111827', mb: { xs: 2, md: 3 }, letterSpacing: '0.05em', fontSize: { xs: '0.75rem', md: '0.85rem' } }}>
                 PLATFORM
               </Typography>
-              <Stack spacing={2.5}>
-                <Typography component={Link} to="/products" variant="body2" sx={{ color: '#6B7280', textDecoration: 'none', fontWeight: 500, transition: 'all 0.2s', '&:hover': { color: '#111827', transform: 'translateX(4px)' } }}>
+              <Stack spacing={{ xs: 1.5, md: 2.5 }}>
+                <Typography component={Link} to="/products" sx={{ color: '#6B7280', textDecoration: 'none', fontWeight: 500, fontSize: { xs: '0.8rem', md: '0.875rem' }, transition: 'all 0.2s', '&:hover': { color: '#111827', transform: 'translateX(4px)' } }}>
                   Katalog Produk
                 </Typography>
-                <Typography component={Link} to="/login" variant="body2" sx={{ color: '#6B7280', textDecoration: 'none', fontWeight: 500, transition: 'all 0.2s', '&:hover': { color: '#111827', transform: 'translateX(4px)' } }}>
+                <Typography component={Link} to="/login" sx={{ color: '#6B7280', textDecoration: 'none', fontWeight: 500, fontSize: { xs: '0.8rem', md: '0.875rem' }, transition: 'all 0.2s', '&:hover': { color: '#111827', transform: 'translateX(4px)' } }}>
                   Masuk / Daftar
                 </Typography>
-                <Typography component={Link} to="/orders" variant="body2" sx={{ color: '#6B7280', textDecoration: 'none', fontWeight: 500, transition: 'all 0.2s', '&:hover': { color: '#111827', transform: 'translateX(4px)' } }}>
+                <Typography component={Link} to="/orders" sx={{ color: '#6B7280', textDecoration: 'none', fontWeight: 500, fontSize: { xs: '0.8rem', md: '0.875rem' }, transition: 'all 0.2s', '&:hover': { color: '#111827', transform: 'translateX(4px)' } }}>
                   Pesanan Saya
                 </Typography>
               </Stack>
@@ -110,44 +114,43 @@ export default function Footer() {
 
             {/* Links Section 2 */}
             <Grid item xs={6} md={3}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#111827', mb: 3, letterSpacing: '0.05em', fontSize: '0.85rem' }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#111827', mb: { xs: 2, md: 3 }, letterSpacing: '0.05em', fontSize: { xs: '0.75rem', md: '0.85rem' } }}>
                 PERUSAHAAN
               </Typography>
-              <Stack spacing={2.5}>
+              <Stack spacing={{ xs: 1.5, md: 2.5 }}>
                 <Typography 
                   component="button" 
                   onClick={handleOpen} 
-                  variant="body2" 
-                  sx={{ color: '#6B7280', textDecoration: 'none', fontWeight: 500, background: 'none', border: 'none', padding: 0, textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', '&:hover': { color: '#111827', transform: 'translateX(4px)' } }}
+                  sx={{ color: '#6B7280', textDecoration: 'none', fontWeight: 500, fontSize: { xs: '0.8rem', md: '0.875rem' }, background: 'none', border: 'none', padding: 0, textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', '&:hover': { color: '#111827', transform: 'translateX(4px)' } }}
                 >
                   Tentang Kreator
                 </Typography>
-                <Typography component={Link} to="#" variant="body2" sx={{ color: '#6B7280', textDecoration: 'none', fontWeight: 500, transition: 'all 0.2s', '&:hover': { color: '#111827', transform: 'translateX(4px)' } }}>
+                <Typography component={Link} to="#" sx={{ color: '#6B7280', textDecoration: 'none', fontWeight: 500, fontSize: { xs: '0.8rem', md: '0.875rem' }, transition: 'all 0.2s', '&:hover': { color: '#111827', transform: 'translateX(4px)' } }}>
                   Kebijakan Privasi
                 </Typography>
-                <Typography component={Link} to="#" variant="body2" sx={{ color: '#6B7280', textDecoration: 'none', fontWeight: 500, transition: 'all 0.2s', '&:hover': { color: '#111827', transform: 'translateX(4px)' } }}>
+                <Typography component={Link} to="#" sx={{ color: '#6B7280', textDecoration: 'none', fontWeight: 500, fontSize: { xs: '0.8rem', md: '0.875rem' }, transition: 'all 0.2s', '&:hover': { color: '#111827', transform: 'translateX(4px)' } }}>
                   Syarat & Ketentuan
                 </Typography>
               </Stack>
             </Grid>
           </Grid>
 
-          <Divider sx={{ mb: 4, borderColor: '#E5E7EB' }} />
+          <Divider sx={{ mb: { xs: 3, md: 4 }, borderColor: '#E5E7EB' }} />
 
           {/* Bottom Section */}
-          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: 'center', gap: 3 }}>
-            <Typography variant="body2" sx={{ color: '#9CA3AF', fontWeight: 500 }}>
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column-reverse', sm: 'row' }, justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
+            <Typography sx={{ color: '#9CA3AF', fontWeight: 500, textAlign: { xs: 'center', sm: 'left' }, fontSize: { xs: '0.75rem', md: '0.875rem' } }}>
               © {year} Dibitech Inc. Designed by Wisnu.
             </Typography>
-            <Stack direction="row" spacing={1.5}>
-              <IconButton component="a" href="https://github.com/wisnunugraha" target="_blank" size="small" sx={{ color: '#6B7280', bgcolor: '#ffffff', borderRadius: '8px', border: '1px solid #E5E7EB', '&:hover': { color: '#111827', bgcolor: '#F3F4F6', borderColor: '#D1D5DB' } }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            <Stack direction="row" spacing={1.5} sx={{ mb: { xs: 1, sm: 0 } }}>
+              <IconButton component="a" href="https://github.com/wisnunugraha" target="_blank" sx={{ width: { xs: 32, md: 36 }, height: { xs: 32, md: 36 }, color: '#6B7280', bgcolor: '#ffffff', borderRadius: '8px', border: '1px solid #E5E7EB', '&:hover': { color: '#111827', bgcolor: '#F3F4F6', borderColor: '#D1D5DB' } }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
               </IconButton>
-              <IconButton component="a" href="#" size="small" sx={{ color: '#6B7280', bgcolor: '#ffffff', borderRadius: '8px', border: '1px solid #E5E7EB', '&:hover': { color: '#ffffff', bgcolor: '#1DA1F2', borderColor: '#1DA1F2' } }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+              <IconButton component="a" href="#" sx={{ width: { xs: 32, md: 36 }, height: { xs: 32, md: 36 }, color: '#6B7280', bgcolor: '#ffffff', borderRadius: '8px', border: '1px solid #E5E7EB', '&:hover': { color: '#ffffff', bgcolor: '#1DA1F2', borderColor: '#1DA1F2' } }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
               </IconButton>
-              <IconButton component="a" href="https://portofolio-wisnu-codes.vercel.app/" target="_blank" size="small" sx={{ color: '#6B7280', bgcolor: '#ffffff', borderRadius: '8px', border: '1px solid #E5E7EB', '&:hover': { color: '#ffffff', bgcolor: '#0A66C2', borderColor: '#0A66C2' } }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+              <IconButton component="a" href="https://portofolio-wisnu-codes.vercel.app/" target="_blank" sx={{ width: { xs: 32, md: 36 }, height: { xs: 32, md: 36 }, color: '#6B7280', bgcolor: '#ffffff', borderRadius: '8px', border: '1px solid #E5E7EB', '&:hover': { color: '#ffffff', bgcolor: '#0A66C2', borderColor: '#0A66C2' } }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
               </IconButton>
             </Stack>
           </Box>

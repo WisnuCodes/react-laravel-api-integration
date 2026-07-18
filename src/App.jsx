@@ -14,6 +14,7 @@ import ProductDetail from './pages/ProductDetail';
 import Users from './pages/Users';
 import UserDetail from './pages/UserDetail';
 import Orders from './pages/Orders';
+import Library from './pages/Library';
 import SellerDashboard from './pages/SellerDashboard';
 import Cart from './pages/Cart';
 import Landing from './pages/Landing';
@@ -68,6 +69,7 @@ function AppContent() {
             <Route path="/users" element={<Users />} />
             <Route path="/users/:id" element={<UserDetail />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/library" element={<Library />} />
             <Route path="/seller/dashboard" element={<SellerDashboard />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/cart" element={<Cart />} />

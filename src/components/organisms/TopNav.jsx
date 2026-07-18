@@ -10,21 +10,18 @@ import {
   Menu, 
   MenuItem,
   Typography,
-  Divider,
   ListItemIcon,
-  Popover,
-  Grid
+  Divider
 } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import LogoutIcon from '@mui/icons-material/Logout';
-import StorefrontIcon from '@mui/icons-material/Storefront';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import DiamondIcon from '@mui/icons-material/Diamond';
-import CodeIcon from '@mui/icons-material/Code';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import FolderSpecialIcon from '@mui/icons-material/FolderSpecial';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import LogoutIcon from '@mui/icons-material/Logout';
+import CategoryIcon from '@mui/icons-material/Category';
 import PersonIcon from '@mui/icons-material/Person';
 import Logo from '../atoms/Logo';
 import { useAuth } from '../../context/AuthContext';
@@ -39,45 +36,44 @@ export default function TopNav() {
   const { itemCount } = useCart();
   const { wishlistItems } = useWishlist();
 
-  // Fetch categories for Mega Menu
+  const isBuyer = isLoggedIn && user?.role === 'buyer';
+  const isAdmin = isLoggedIn && user?.role === 'admin';
+  const isSeller = isLoggedIn && user?.role === 'seller';
+
   const { data: categories } = useFetch('/categories', [], 300000);
 
-  // State for Avatar Menu
-  const [anchorEl, setAnchorEl] = useState(null);
-  const openMenu = Boolean(anchorEl);
+  const [produkAnchorEl, setProdukAnchorEl] = useState(null);
+  const [akunAnchorEl, setAkunAnchorEl] = useState(null);
+  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
 
-  // State for Mega Menu (Eksplorasi)
-  const [megaAnchorEl, setMegaAnchorEl] = useState(null);
-  const openMega = Boolean(megaAnchorEl);
+  // --- Dropdown Handlers ---
+  const openProduk = Boolean(produkAnchorEl);
+  const openAkun = Boolean(akunAnchorEl);
+  const openProfile = Boolean(profileAnchorEl);
 
-  const handleMenuClick = (event) => setAnchorEl(event.currentTarget);
-  const handleMenuClose = () => setAnchorEl(null);
+  const handleProdukClick = (event) => setProdukAnchorEl(event.currentTarget);
+  const handleProdukClose = () => setProdukAnchorEl(null);
 
-  const handleMegaClick = (event) => {
-    // If it's already open, close it, else open it
-    if (megaAnchorEl) {
-      setMegaAnchorEl(null);
-    } else {
-      setMegaAnchorEl(event.currentTarget);
-    }
-  };
-  const handleMegaClose = () => setMegaAnchorEl(null);
+  const handleAkunClick = (event) => setAkunAnchorEl(event.currentTarget);
+  const handleAkunClose = () => setAkunAnchorEl(null);
+
+  const handleProfileClick = (event) => setProfileAnchorEl(event.currentTarget);
+  const handleProfileClose = () => setProfileAnchorEl(null);
 
   const handleLogout = () => {
-    handleMenuClose();
+    handleProfileClose();
+    handleAkunClose();
     logout();
     navigate('/');
   };
-
-  const isBuyer = isLoggedIn && user?.role === 'buyer';
 
   return (
     <AppBar 
       position="sticky" 
       elevation={0} 
       sx={{ 
-        bgcolor: 'rgba(255, 255, 255, 0.90)',
-        backdropFilter: 'blur(12px)',
+        bgcolor: 'rgba(255, 255, 255, 0.85)',
+        backdropFilter: 'blur(16px)',
         borderBottom: '1px solid #E5E7EB',
         color: '#111827',
         zIndex: (theme) => theme.zIndex.drawer + 1
@@ -86,123 +82,166 @@ export default function TopNav() {
       <Toolbar sx={{ px: { xs: 2, md: 4, lg: 6 }, height: 72, display: 'flex', justifyContent: 'space-between' }}>
         
         {/* LEFT: Logo */}
-        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-start', minWidth: 150 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Logo />
         </Box>
 
-        {/* CENTER: Desktop Navigation (Pill Layout) */}
-        <Box 
-          sx={{ 
-            display: { xs: 'none', md: 'flex' }, 
-            alignItems: 'center', 
-            bgcolor: '#ffffff', 
-            p: 0.5, 
-            borderRadius: '99px',
-            border: '1px solid #E5E7EB',
-            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)',
-            whiteSpace: 'nowrap'
-          }}
-        >
-          <Button
-            component={Link}
-            to="/"
+        {/* CENTER: Main Dropdown Menus */}
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2, ml: 4 }}>
+          
+          {/* 1. Beranda (Single Button) */}
+          <Button 
+            component={Link} 
+            to="/" 
             disableRipple
-            sx={{
-              color: location.pathname === '/' ? '#000000' : '#4B5563',
-              fontWeight: location.pathname === '/' ? 700 : 500,
+            sx={{ 
+              color: location.pathname === '/' ? '#111827' : '#4B5563', 
+              fontWeight: 600, 
               fontSize: '0.9rem',
-              px: 3, py: 1,
-              borderRadius: '99px',
-              bgcolor: location.pathname === '/' ? '#F3F4F6' : 'transparent',
-              '&:hover': { bgcolor: '#F9FAFB', color: '#111827' }
+              '&:hover': { bgcolor: '#F3F4F6', color: '#111827' },
+              borderRadius: '8px', px: 2, py: 1
             }}
           >
             Beranda
           </Button>
-          
-          <Button
+
+          {/* 2. Produk (Dropdown Menu) */}
+          <Button 
             disableRipple
-            onClick={handleMegaClick}
-            endIcon={<KeyboardArrowDownIcon sx={{ transition: 'transform 0.2s', transform: openMega ? 'rotate(180deg)' : 'none' }} />}
-            sx={{
-              color: location.pathname.includes('/products') || openMega ? '#000000' : '#4B5563',
-              fontWeight: location.pathname.includes('/products') || openMega ? 700 : 500,
+            onClick={handleProdukClick}
+            endIcon={<KeyboardArrowDownIcon sx={{ transition: '0.2s', transform: openProduk ? 'rotate(180deg)' : 'none' }} />}
+            sx={{ 
+              color: openProduk || location.pathname.includes('/products') ? '#111827' : '#4B5563', 
+              fontWeight: 600, 
               fontSize: '0.9rem',
-              px: 3, py: 1,
-              borderRadius: '99px',
-              bgcolor: location.pathname.includes('/products') || openMega ? '#F3F4F6' : 'transparent',
-              '&:hover': { bgcolor: '#F9FAFB', color: '#111827' }
+              '&:hover': { bgcolor: '#F3F4F6', color: '#111827' },
+              borderRadius: '8px', px: 2, py: 1
             }}
           >
-            Eksplorasi
+            Katalog Produk
           </Button>
+          <Menu
+            anchorEl={produkAnchorEl}
+            open={openProduk}
+            onClose={handleProdukClose}
+            transformOrigin={{ horizontal: 'center', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: 'visible', filter: 'drop-shadow(0px 8px 24px rgba(0,0,0,0.1))',
+                mt: 1, minWidth: 220, borderRadius: '16px', border: '1px solid #E5E7EB'
+              },
+            }}
+          >
+            <MenuItem component={Link} to="/products" onClick={handleProdukClose} sx={{ py: 1.5, px: 2 }}>
+              <ListItemIcon><CategoryIcon fontSize="small" sx={{ color: '#4B5563' }} /></ListItemIcon>
+              <Typography fontWeight={600} fontSize="0.9rem">Semua Produk</Typography>
+            </MenuItem>
+            <Divider sx={{ my: 0.5 }} />
+            
+            {categories && categories.length > 0 ? (
+              categories.map((cat) => (
+                <MenuItem key={cat.id} component={Link} to={`/products?category=${cat.id}`} onClick={handleProdukClose} sx={{ py: 1.5, px: 2 }}>
+                  <Typography fontWeight={500} fontSize="0.85rem" sx={{ ml: 4 }}>{cat.name}</Typography>
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled sx={{ py: 1.5, px: 2 }}>
+                <Typography fontWeight={500} fontSize="0.85rem" sx={{ ml: 4 }}>Memuat...</Typography>
+              </MenuItem>
+            )}
+          </Menu>
 
-          {isLoggedIn && user?.role === 'admin' && (
-            <Button
-              component={Link}
-              to="/admin/dashboard"
-              disableRipple
-              sx={{
-                color: location.pathname.includes('/admin') ? '#000000' : '#4B5563',
-                fontWeight: location.pathname.includes('/admin') ? 700 : 500,
-                fontSize: '0.9rem',
-                px: 3, py: 1,
-                borderRadius: '99px',
-                bgcolor: location.pathname.includes('/admin') ? '#F3F4F6' : 'transparent',
-                '&:hover': { bgcolor: '#F9FAFB', color: '#111827' }
-              }}
-            >
-              Dasbor Admin
-            </Button>
-          )}
-
-          {isLoggedIn && user?.role === 'seller' && (
-            <Button
-              component={Link}
-              to="/seller/dashboard"
-              disableRipple
-              sx={{
-                color: location.pathname.includes('/seller') ? '#000000' : '#4B5563',
-                fontWeight: location.pathname.includes('/seller') ? 700 : 500,
-                fontSize: '0.9rem',
-                px: 3, py: 1,
-                borderRadius: '99px',
-                bgcolor: location.pathname.includes('/seller') ? '#F3F4F6' : 'transparent',
-                '&:hover': { bgcolor: '#F9FAFB', color: '#111827' }
-              }}
-            >
-              Dasbor Seller
-            </Button>
-          )}
-        </Box>
-
-        {/* RIGHT: Actions */}
-        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: { xs: 1, md: 2 }, minWidth: 150 }}>
-          
-          {/* Cart & Wishlist (Visible on mobile & desktop if buyer) */}
-          {isBuyer && (
-            <Box sx={{ display: 'flex', gap: 0.5 }}>
-              <IconButton
-                component={Link}
-                to="/wishlist"
+          {/* 3. Akun & Manajemen (Dropdown Menu - Only if Logged In) */}
+          {isLoggedIn && (
+            <>
+              <Button 
+                disableRipple
+                onClick={handleAkunClick}
+                endIcon={<KeyboardArrowDownIcon sx={{ transition: '0.2s', transform: openAkun ? 'rotate(180deg)' : 'none' }} />}
                 sx={{ 
-                  color: '#4B5563',
-                  '&:hover': { bgcolor: '#F3F4F6', color: '#111827' } 
+                  color: openAkun ? '#111827' : '#4B5563', 
+                  fontWeight: 600, 
+                  fontSize: '0.9rem',
+                  '&:hover': { bgcolor: '#F3F4F6', color: '#111827' },
+                  borderRadius: '8px', px: 2, py: 1
                 }}
               >
+                Manajemen Akun
+              </Button>
+              <Menu
+                anchorEl={akunAnchorEl}
+                open={openAkun}
+                onClose={handleAkunClose}
+                transformOrigin={{ horizontal: 'center', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
+                PaperProps={{
+                  elevation: 0,
+                  sx: {
+                    overflow: 'visible', filter: 'drop-shadow(0px 8px 24px rgba(0,0,0,0.1))',
+                    mt: 1, minWidth: 240, borderRadius: '16px', border: '1px solid #E5E7EB'
+                  },
+                }}
+              >
+                <Box sx={{ px: 2.5, py: 1.5 }}>
+                  <Typography variant="body2" color="text.secondary">Masuk sebagai</Typography>
+                  <Typography variant="subtitle2" fontWeight={800} noWrap>{user?.name}</Typography>
+                </Box>
+                <Divider sx={{ mb: 1 }} />
+                
+                {/* Buyer Links */}
+                {isBuyer && (
+                  <>
+                    <MenuItem component={Link} to="/library" onClick={handleAkunClose} sx={{ py: 1.5, px: 2 }}>
+                      <ListItemIcon><FolderSpecialIcon fontSize="small" sx={{ color: '#10B981' }} /></ListItemIcon>
+                      <Typography fontWeight={600} fontSize="0.9rem">My Library</Typography>
+                    </MenuItem>
+                    <MenuItem component={Link} to="/orders" onClick={handleAkunClose} sx={{ py: 1.5, px: 2 }}>
+                      <ListItemIcon><StorefrontIcon fontSize="small" sx={{ color: '#4B5563' }} /></ListItemIcon>
+                      <Typography fontWeight={600} fontSize="0.9rem">Pesanan Saya</Typography>
+                    </MenuItem>
+                  </>
+                )}
+
+                {/* Seller / Admin Links */}
+                {isSeller && (
+                  <MenuItem component={Link} to="/seller/dashboard" onClick={handleAkunClose} sx={{ py: 1.5, px: 2 }}>
+                    <ListItemIcon><DashboardIcon fontSize="small" sx={{ color: '#3B82F6' }} /></ListItemIcon>
+                    <Typography fontWeight={600} fontSize="0.9rem">Dasbor Seller</Typography>
+                  </MenuItem>
+                )}
+                {isAdmin && (
+                  <>
+                    <MenuItem component={Link} to="/admin/dashboard" onClick={handleAkunClose} sx={{ py: 1.5, px: 2 }}>
+                      <ListItemIcon><DashboardIcon fontSize="small" sx={{ color: '#8B5CF6' }} /></ListItemIcon>
+                      <Typography fontWeight={600} fontSize="0.9rem">Dasbor Admin</Typography>
+                    </MenuItem>
+                    <MenuItem component={Link} to="/users" onClick={handleAkunClose} sx={{ py: 1.5, px: 2 }}>
+                      <ListItemIcon><PersonIcon fontSize="small" sx={{ color: '#4B5563' }} /></ListItemIcon>
+                      <Typography fontWeight={600} fontSize="0.9rem">Kelola Pengguna</Typography>
+                    </MenuItem>
+                  </>
+                )}
+              </Menu>
+            </>
+          )}
+
+        </Box>
+
+        {/* RIGHT: Actions & Avatar */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, md: 2 }, ml: 'auto' }}>
+          
+          {/* Wishlist & Cart Icons for Buyer */}
+          {isBuyer && (
+            <Box sx={{ display: 'flex', gap: 1, mr: 1 }}>
+              <IconButton component={Link} to="/wishlist" sx={{ color: '#4B5563', '&:hover': { bgcolor: '#F3F4F6', color: '#111827' } }}>
                 <Badge badgeContent={wishlistItems?.length || 0} color="error" max={99}>
                   <FavoriteBorderOutlinedIcon fontSize="small" />
                 </Badge>
               </IconButton>
               
-              <IconButton
-                component={Link}
-                to="/cart"
-                sx={{ 
-                  color: '#4B5563',
-                  '&:hover': { bgcolor: '#F3F4F6', color: '#111827' } 
-                }}
-              >
+              <IconButton component={Link} to="/cart" sx={{ color: '#4B5563', '&:hover': { bgcolor: '#F3F4F6', color: '#111827' } }}>
                 <Badge badgeContent={itemCount} color="error" max={99}>
                   <ShoppingCartOutlinedIcon fontSize="small" />
                 </Badge>
@@ -210,82 +249,57 @@ export default function TopNav() {
             </Box>
           )}
 
-          {/* Profile / Auth (Hidden on mobile, handled by BottomNav) */}
+          {/* User Profile Avatar or Login/Signup */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
             {isLoggedIn ? (
               <>
-                <IconButton
-                  onClick={handleMenuClick}
-                  sx={{ 
-                    p: 0.5, 
-                    border: '2px solid transparent', 
-                    '&:hover': { borderColor: '#E5E7EB' }, 
-                    transition: 'all 0.2s',
-                    ml: 1
-                  }}
+                <IconButton 
+                  onClick={handleProfileClick}
+                  sx={{ p: 0.5, border: '2px solid transparent', '&:hover': { borderColor: '#E5E7EB' }, transition: 'all 0.2s', ml: 1 }}
                 >
-                  <Avatar sx={{ width: 38, height: 38, bgcolor: '#111827', fontSize: '1rem', fontWeight: 700 }}>
+                  <Avatar sx={{ width: 40, height: 40, bgcolor: '#111827', fontSize: '1.1rem', fontWeight: 700 }}>
                     {user?.name?.charAt(0)?.toUpperCase()}
                   </Avatar>
                 </IconButton>
                 <Menu
-                  anchorEl={anchorEl}
-                  open={openMenu}
-                  onClose={handleMenuClose}
-                  onClick={handleMenuClose}
+                  anchorEl={profileAnchorEl}
+                  open={openProfile}
+                  onClose={handleProfileClose}
                   transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                   PaperProps={{
                     elevation: 0,
                     sx: {
-                      overflow: 'visible',
-                      filter: 'drop-shadow(0px 10px 30px rgba(0,0,0,0.1))',
-                      mt: 1.5,
-                      minWidth: 240,
-                      borderRadius: '16px',
-                      border: '1px solid #E5E7EB'
+                      overflow: 'visible', filter: 'drop-shadow(0px 8px 24px rgba(0,0,0,0.1))',
+                      mt: 1, minWidth: 200, borderRadius: '16px', border: '1px solid #E5E7EB'
                     },
                   }}
                 >
-                  <Box sx={{ px: 2.5, py: 2 }}>
-                    <Typography variant="subtitle2" fontWeight={800} sx={{ fontSize: '1rem' }} noWrap>{user?.name}</Typography>
+                  <Box sx={{ px: 2.5, py: 1.5 }}>
+                    <Typography variant="subtitle2" fontWeight={800} noWrap>{user?.name}</Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>{user?.email}</Typography>
                   </Box>
-                  <Divider sx={{ borderColor: '#F3F4F6' }} />
-                  
-                  {isBuyer && (
-                    <MenuItem component={Link} to="/orders" sx={{ py: 1.5, px: 2.5 }}>
-                      <ListItemIcon><StorefrontIcon fontSize="small" sx={{ color: '#4B5563' }} /></ListItemIcon>
-                      <Typography fontWeight={600} fontSize="0.9rem">Pesanan Saya</Typography>
-                    </MenuItem>
-                  )}
-                  {user?.role === 'admin' && (
-                    <MenuItem component={Link} to="/users" sx={{ py: 1.5, px: 2.5 }}>
-                      <ListItemIcon><PersonIcon fontSize="small" sx={{ color: '#4B5563' }} /></ListItemIcon>
-                      <Typography fontWeight={600} fontSize="0.9rem">Kelola Pengguna</Typography>
-                    </MenuItem>
-                  )}
-
-                  <Divider sx={{ borderColor: '#F3F4F6' }} />
-                  <MenuItem onClick={handleLogout} sx={{ py: 1.5, px: 2.5, color: '#EF4444' }}>
+                  <Divider sx={{ mb: 1 }} />
+                  <MenuItem onClick={handleLogout} sx={{ py: 1.5, px: 2, color: '#EF4444' }}>
                     <ListItemIcon><LogoutIcon fontSize="small" sx={{ color: '#EF4444' }} /></ListItemIcon>
                     <Typography fontWeight={600} fontSize="0.9rem">Keluar Akun</Typography>
                   </MenuItem>
                 </Menu>
               </>
             ) : (
-              <Box sx={{ display: 'flex', gap: 1, ml: 1 }}>
+              <Box sx={{ display: 'flex', gap: 1.5 }}>
                 <Button 
                   component={Link} 
                   to="/login"
-                  variant="text" 
+                  variant="outlined" 
                   disableRipple
                   sx={{ 
-                    color: '#4B5563', 
+                    color: '#111827', 
+                    borderColor: '#E5E7EB',
                     fontWeight: 600, 
-                    px: 2.5, 
+                    px: 3, 
                     borderRadius: '99px',
-                    '&:hover': { color: '#111827', bgcolor: '#F9FAFB' }
+                    '&:hover': { bgcolor: '#F9FAFB', borderColor: '#D1D5DB' }
                   }}
                 >
                   Masuk
@@ -299,101 +313,18 @@ export default function TopNav() {
                     bgcolor: '#111827', 
                     color: '#ffffff', 
                     fontWeight: 600, 
-                    px: 3.5, 
-                    py: 1,
+                    px: 3, 
                     borderRadius: '99px',
-                    whiteSpace: 'nowrap',
-                    '&:hover': { bgcolor: '#374151' }
+                    '&:hover': { bgcolor: '#000000' }
                   }}
                 >
-                  Buat Akun
+                  Daftar
                 </Button>
               </Box>
             )}
           </Box>
         </Box>
       </Toolbar>
-
-      {/* MEGA MENU (Eksplorasi) */}
-      <Popover
-        open={openMega}
-        anchorEl={megaAnchorEl}
-        onClose={handleMegaClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            mt: 2,
-            overflow: 'hidden',
-            filter: 'drop-shadow(0px 20px 40px rgba(0,0,0,0.1))',
-            borderRadius: '24px',
-            border: '1px solid #E5E7EB',
-            width: 700,
-            maxWidth: '90vw'
-          }
-        }}
-      >
-        <Grid container>
-          <Grid item xs={5} sx={{ bgcolor: '#F9FAFB', p: 4, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <Typography variant="h5" fontWeight={800} color="#111827" sx={{ mb: 2, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
-              Jelajahi aset<br/>kreatif tanpa batas.
-            </Typography>
-            <Typography variant="body2" color="#6B7280" sx={{ mb: 4 }}>
-              Temukan UI Kit, template React, hingga desain 3D untuk proyek Anda berikutnya.
-            </Typography>
-            <Button
-              component={Link}
-              to="/products"
-              onClick={handleMegaClose}
-              variant="outlined"
-              sx={{ 
-                alignSelf: 'flex-start',
-                borderRadius: '99px', 
-                color: '#111827', 
-                borderColor: '#111827',
-                fontWeight: 600,
-                px: 3,
-                '&:hover': { bgcolor: '#111827', color: '#ffffff' }
-              }}
-            >
-              Lihat Katalog
-            </Button>
-          </Grid>
-          
-          <Grid item xs={7} sx={{ p: 4, bgcolor: '#ffffff' }}>
-            <Typography variant="overline" fontWeight={700} color="#9CA3AF" sx={{ display: 'block', mb: 2, letterSpacing: '0.05em' }}>
-              Kategori Teratas
-            </Typography>
-            
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {categories && categories.length > 0 ? categories.slice(0, 4).map((cat, idx) => {
-                const icons = [<AutoFixHighIcon />, <CodeIcon />, <DiamondIcon />, <StorefrontIcon />];
-                return (
-                  <Button
-                    key={cat.id || idx}
-                    component={Link}
-                    to={`/products?category=${cat.id}`}
-                    onClick={handleMegaClose}
-                    startIcon={icons[idx % icons.length]}
-                    sx={{ 
-                      justifyContent: 'flex-start', color: '#4B5563', fontWeight: 600, p: 1.5, 
-                      borderRadius: '12px', '&:hover': { bgcolor: '#F3F4F6', color: '#111827' },
-                      '& .MuiButton-startIcon': { color: '#111827' }
-                    }}
-                  >
-                    {cat.name}
-                  </Button>
-                );
-              }) : (
-                <Typography variant="body2" color="#9CA3AF" sx={{ p: 2 }}>
-                  Belum ada kategori tersedia.
-                </Typography>
-              )}
-            </Box>
-          </Grid>
-        </Grid>
-      </Popover>
     </AppBar>
   );
 }

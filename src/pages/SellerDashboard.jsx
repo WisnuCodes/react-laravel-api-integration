@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Container, Typography, Box, CircularProgress, Alert,
-  Paper, Chip, Table, TableBody, TableCell, TableContainer,
+  Paper, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, IconButton, Tooltip, Dialog, DialogTitle,
-  DialogContent, DialogActions, Button, TextField, MenuItem
+  DialogContent, DialogActions, Button, TextField, MenuItem,
+  Grid, Card, CardContent
 } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import EditIcon from '@mui/icons-material/Edit';
@@ -126,93 +127,93 @@ export default function SellerDashboard() {
 
   if (loading) {
     return (
-      <Container maxWidth="lg" sx={{ py: 10, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+      <Box sx={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: '#FAFAFA' }}>
         <CircularProgress sx={{ color: '#000000' }} />
-      </Container>
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Alert severity="error">{error}</Alert>
-      </Container>
+      <Box sx={{ minHeight: '100vh', py: 6, px: 2, bgcolor: '#FAFAFA' }}>
+        <Container maxWidth="lg">
+          <Alert severity="error" sx={{ borderRadius: '8px' }}>{error}</Alert>
+        </Container>
+      </Box>
     );
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-
-      {/* Header */}
-      <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
-        <Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
-            <DashboardIcon sx={{ fontSize: 40, color: '#000000' }} />
-            <Typography
-              variant="h3"
-              component="h1"
-              fontWeight="bold"
-              sx={{
-                color: '#000000',
-                fontSize: { xs: '1.8rem', md: '2.5rem' },
-                letterSpacing: '-0.025em',
-              }}
-            >
+    <Box sx={{ bgcolor: '#FAFAFA', minHeight: '100vh', pb: 10 }}>
+      {/* Vercel-like Header Section */}
+      <Box sx={{ bgcolor: '#ffffff', borderBottom: '1px solid #EAEAEA', pt: { xs: 4, md: 5 }, pb: { xs: 3, md: 4 }, px: { xs: 2, md: 3 }, mb: { xs: 3, md: 4 } }}>
+        <Container maxWidth="lg" disableGutters sx={{ px: { xs: 1, sm: 2 }, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, gap: 2 }}>
+          <Box>
+            <Typography variant="h4" fontWeight={700} sx={{ color: '#000000', mb: 0.5, letterSpacing: '-0.04em', fontSize: { xs: '1.75rem', md: '2.125rem' } }}>
               Dashboard Seller
             </Typography>
+            <Typography variant="body2" sx={{ color: '#666666' }}>
+              Kelola semua produk yang Anda jual di platform ini.
+            </Typography>
           </Box>
-          <Typography variant="h6" sx={{ color: '#6b7280', fontSize: { xs: '0.95rem', md: '1.15rem' } }}>
-            Kelola semua produk yang Anda jual
-          </Typography>
-        </Box>
 
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={openAddDialog}
-          sx={{
-            bgcolor: '#000000',
-            textTransform: 'none',
-            fontWeight: 600,
-            borderRadius: 2,
-            px: 3,
-            '&:hover': { bgcolor: '#333333' },
-          }}
-        >
-          Tambah Produk
-        </Button>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={openAddDialog}
+            sx={{
+              bgcolor: '#000000',
+              textTransform: 'none',
+              fontWeight: 600,
+              borderRadius: '8px',
+              px: 3, py: 1,
+              '&:hover': { bgcolor: '#333333' },
+            }}
+            disableElevation
+          >
+            Tambah Produk
+          </Button>
+        </Container>
       </Box>
 
-      {/* Stats */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 2, mb: 4 }}>
-        <StatCard label="Total Produk" value={myProducts.length} />
-        <StatCard label="Produk Aktif" value={myProducts.filter(p => p.status === 'active').length} />
-        <StatCard label="Estimasi Pendapatan" value={`Rp ${totalRevenue.toLocaleString('id-ID')}`} />
-      </Box>
+      <Container maxWidth="lg" disableGutters sx={{ px: { xs: 2, sm: 3 } }}>
+        {/* Stats */}
+        <Grid container spacing={{ xs: 2, md: 3 }} sx={{ mb: { xs: 4, md: 6 } }}>
+          <Grid item xs={12} sm={4}>
+            <StatCard label="Total Produk" value={myProducts.length} />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <StatCard label="Produk Aktif" value={myProducts.filter(p => p.status === 'active').length} />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <StatCard label="Estimasi Pendapatan" value={`Rp ${totalRevenue.toLocaleString('id-ID')}`} />
+          </Grid>
+        </Grid>
 
       {/* Products Table */}
       {myProducts.length === 0 ? (
         <Paper
           elevation={0}
           sx={{
-            borderRadius: 3,
-            border: '1px solid',
-            borderColor: 'divider',
+            borderRadius: '12px',
+            border: '1px solid #EAEAEA',
+            bgcolor: '#ffffff',
             py: 8,
             textAlign: 'center',
           }}
         >
-          <DashboardIcon sx={{ fontSize: 48, color: '#d1d5db', mb: 2 }} />
-          <Typography sx={{ color: '#6b7280', mb: 2 }}>Belum ada produk.</Typography>
+          <DashboardIcon sx={{ fontSize: 48, color: '#EAEAEA', mb: 2 }} />
+          <Typography sx={{ color: '#666666', mb: 3 }}>Anda belum memiliki produk.</Typography>
           <Button
             variant="outlined"
             onClick={openAddDialog}
             sx={{
               textTransform: 'none',
               fontWeight: 600,
-              borderRadius: 2,
-              borderColor: '#e5e7eb',
+              borderRadius: '8px',
+              borderColor: '#EAEAEA',
               color: '#000000',
+              '&:hover': { bgcolor: '#FAFAFA', borderColor: '#cccccc' }
             }}
           >
             Tambah Produk Pertama
@@ -223,30 +224,30 @@ export default function SellerDashboard() {
           component={Paper}
           elevation={0}
           sx={{
-            borderRadius: 3,
-            border: '1px solid',
-            borderColor: 'divider',
+            borderRadius: '12px',
+            border: '1px solid #EAEAEA',
+            bgcolor: '#ffffff'
           }}
         >
           <Table sx={{ minWidth: 750 }}>
             <TableHead>
-              <TableRow sx={{ bgcolor: 'grey.50' }}>
-                <TableCell sx={{ fontWeight: 700, color: '#6b7280', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <TableRow sx={{ bgcolor: '#FAFAFA' }}>
+                <TableCell sx={{ fontWeight: 500, color: '#666666', borderBottom: '1px solid #EAEAEA' }}>
                   Produk
                 </TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#6b7280', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <TableCell sx={{ fontWeight: 500, color: '#666666', borderBottom: '1px solid #EAEAEA' }}>
                   Kategori
                 </TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#6b7280', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }} align="right">
+                <TableCell sx={{ fontWeight: 500, color: '#666666', borderBottom: '1px solid #EAEAEA' }} align="right">
                   Harga
                 </TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#6b7280', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }} align="center">
+                <TableCell sx={{ fontWeight: 500, color: '#666666', borderBottom: '1px solid #EAEAEA' }} align="center">
                   Rating
                 </TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#6b7280', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }} align="center">
+                <TableCell sx={{ fontWeight: 500, color: '#666666', borderBottom: '1px solid #EAEAEA' }} align="center">
                   Status
                 </TableCell>
-                <TableCell sx={{ fontWeight: 700, color: '#6b7280', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }} align="center">
+                <TableCell sx={{ fontWeight: 500, color: '#666666', borderBottom: '1px solid #EAEAEA' }} align="center">
                   Aksi
                 </TableCell>
               </TableRow>
@@ -257,67 +258,75 @@ export default function SellerDashboard() {
                   key={product.id}
                   sx={{
                     transition: 'background-color 0.2s',
-                    '&:hover': { bgcolor: 'action.hover' },
+                    '&:hover': { bgcolor: '#FAFAFA' },
                     '&:last-child td': { borderBottom: 0 },
                   }}
                 >
-                  <TableCell>
-                    <Typography variant="subtitle2" fontWeight="bold">
+                  <TableCell sx={{ borderBottom: '1px solid #EAEAEA' }}>
+                    <Typography variant="body2" fontWeight={600} color="#111827">
                       {product.title}
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" color="text.secondary">
+                  <TableCell sx={{ borderBottom: '1px solid #EAEAEA' }}>
+                    <Typography variant="body2" color="#666666">
                       {product.category?.name || '-'}
                     </Typography>
                   </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="body2" fontWeight={600}>
+                  <TableCell align="right" sx={{ borderBottom: '1px solid #EAEAEA' }}>
+                    <Typography variant="body2" fontWeight={600} color="#111827">
                       Rp {Number(product.price).toLocaleString('id-ID')}
                     </Typography>
                   </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="body2">
+                  <TableCell align="center" sx={{ borderBottom: '1px solid #EAEAEA' }}>
+                    <Typography variant="body2" color="#666666">
                       ⭐ {Number(product.rating).toFixed(1)}
                     </Typography>
                   </TableCell>
-                  <TableCell align="center">
-                    <Chip
-                      label={product.status === 'active' ? 'Aktif' : 'Nonaktif'}
-                      color={product.status === 'active' ? 'success' : 'default'}
-                      size="small"
-                      variant="outlined"
-                      sx={{ fontWeight: 600, borderRadius: 2 }}
-                    />
+                  <TableCell align="center" sx={{ borderBottom: '1px solid #EAEAEA' }}>
+                    <Box 
+                      sx={{ 
+                        display: 'inline-block',
+                        px: 1.2, py: 0.3, 
+                        borderRadius: '99px',
+                        border: '1px solid',
+                        borderColor: product.status === 'active' ? '#A7F3D0' : '#EAEAEA',
+                        bgcolor: product.status === 'active' ? '#ECFDF5' : '#FAFAFA',
+                        color: product.status === 'active' ? '#065F46' : '#666666',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {product.status === 'active' ? 'Aktif' : 'Nonaktif'}
+                    </Box>
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" sx={{ borderBottom: '1px solid #EAEAEA' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 0.5 }}>
                       <Tooltip title="Lihat" arrow>
                         <IconButton
                           component={Link}
                           to={`/products/${product.id}`}
                           size="small"
-                          sx={{ bgcolor: '#f3f4f6', '&:hover': { bgcolor: '#e5e7eb' } }}
+                          sx={{ color: '#666666', '&:hover': { bgcolor: '#F5F5F5', color: '#111827' } }}
                         >
-                          <VisibilityIcon fontSize="small" sx={{ color: '#000000' }} />
+                          <VisibilityIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Edit" arrow>
                         <IconButton
                           size="small"
                           onClick={() => openEditDialog(product)}
-                          sx={{ bgcolor: '#f3f4f6', '&:hover': { bgcolor: '#e5e7eb' } }}
+                          sx={{ color: '#3B82F6', '&:hover': { bgcolor: '#EFF6FF' } }}
                         >
-                          <EditIcon fontSize="small" sx={{ color: '#000000' }} />
+                          <EditIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Hapus" arrow>
                         <IconButton
                           size="small"
                           onClick={() => handleDelete(product.id)}
-                          sx={{ bgcolor: '#fef2f2', '&:hover': { bgcolor: '#fee2e2' } }}
+                          sx={{ color: '#EF4444', '&:hover': { bgcolor: '#FEF2F2' } }}
                         >
-                          <DeleteIcon fontSize="small" sx={{ color: '#ef4444' }} />
+                          <DeleteIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
                     </Box>
@@ -359,28 +368,34 @@ export default function SellerDashboard() {
             <TextField
               fullWidth
               label="Judul Produk"
+              placeholder="Contoh: Template React E-Commerce Modern"
               variant="outlined"
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
               InputProps={{ sx: { borderRadius: '12px' } }}
+              InputLabelProps={{ shrink: true }}
             />
             <TextField
               fullWidth
               label="Deskripsi Lengkap"
+              placeholder="Contoh: Template ini dibuat menggunakan React dan MUI. Sangat cocok untuk toko online..."
               multiline
               rows={4}
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               InputProps={{ sx: { borderRadius: '12px' } }}
+              InputLabelProps={{ shrink: true }}
             />
             
             <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2.5 }}>
               <TextField
                 label="Harga (Rp)"
+                placeholder="Contoh: 150000"
                 type="number"
                 value={form.price}
                 onChange={(e) => setForm({ ...form, price: e.target.value })}
                 InputProps={{ sx: { borderRadius: '12px' } }}
+                InputLabelProps={{ shrink: true }}
               />
               <TextField
                 select
@@ -399,20 +414,24 @@ export default function SellerDashboard() {
 
             <TextField
               fullWidth
-              label="Tautan Berkas (File Path)"
-              placeholder="https://gdrive.com/..."
+              label="Tautan Berkas Produk (Google Drive / GitHub)"
+              placeholder="Contoh: https://drive.google.com/file/d/1a2b3c4d..."
               value={form.file_path}
               onChange={(e) => setForm({ ...form, file_path: e.target.value })}
               InputProps={{ sx: { borderRadius: '12px' } }}
+              InputLabelProps={{ shrink: true }}
+              helperText="Tautan ini akan diberikan kepada pembeli setelah mereka membayar."
             />
 
             <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2.5 }}>
               <TextField
-                label="URL Thumbnail (Opsional)"
-                placeholder="https://image..."
+                label="URL Gambar/Thumbnail"
+                placeholder="Contoh: https://imgur.com/gambar.png"
                 value={form.thumbnail}
                 onChange={(e) => setForm({ ...form, thumbnail: e.target.value })}
                 InputProps={{ sx: { borderRadius: '12px' } }}
+                InputLabelProps={{ shrink: true }}
+                helperText="Tautan gambar untuk sampul produk."
               />
               <TextField
                 select
@@ -460,27 +479,31 @@ export default function SellerDashboard() {
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+      </Container>
+    </Box>
   );
 }
 
 function StatCard({ label, value }) {
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        borderRadius: 3,
-        border: '1px solid',
-        borderColor: 'divider',
-        p: 3,
+    <Card 
+      elevation={0} 
+      sx={{ 
+        border: '1px solid #EAEAEA', 
+        borderRadius: '8px', 
+        bgcolor: '#ffffff',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.02)',
+        height: '100%'
       }}
     >
-      <Typography variant="caption" sx={{ color: '#6b7280', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.7rem' }}>
-        {label}
-      </Typography>
-      <Typography variant="h5" fontWeight={700} sx={{ mt: 0.5, color: '#111827' }}>
-        {value}
-      </Typography>
-    </Paper>
+      <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
+        <Typography variant="body2" sx={{ color: '#666666', fontWeight: 500, mb: 1 }}>
+          {label}
+        </Typography>
+        <Typography variant="h4" fontWeight={700} color="#000000" sx={{ letterSpacing: '-0.02em' }}>
+          {value}
+        </Typography>
+      </CardContent>
+    </Card>
   );
 }

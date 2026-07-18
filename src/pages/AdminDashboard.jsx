@@ -4,7 +4,7 @@ import {
   Tabs, Tab, Table, TableBody, TableCell, TableContainer, 
   TableHead, TableRow, Dialog, DialogTitle, DialogContent, 
   DialogContentText, DialogActions, Button, Snackbar, Alert, Stack,
-  Divider
+  Divider, TextField
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PeopleIcon from '@mui/icons-material/People';
@@ -20,6 +20,8 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const [tab, setTab] = useState(0);
   const [deleteDialog, setDeleteDialog] = useState({ open: false, type: '', id: null });
+  const [categoryDialog, setCategoryDialog] = useState({ open: false, id: null, name: '' });
+  const [userDialog, setUserDialog] = useState({ open: false, user_id: null, name: '', email: '', role: 'buyer', balance: 0 });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const { data: statsRes, loading: loadingStats } = useFetch(
@@ -34,11 +36,16 @@ export default function AdminDashboard() {
     isLoggedIn && user?.role === 'admin' ? '/admin/products' : null, 
     [], 3000
   );
+  const { data: categoriesRes, loading: loadingCategories, setData: setCategoriesRes } = useFetch(
+    isLoggedIn && user?.role === 'admin' ? '/categories' : null, 
+    [], 3000
+  );
 
   const stats = statsRes?.data || statsRes;
   const users = usersRes?.data || usersRes || [];
   const products = productsRes?.data || productsRes || [];
-  const loading = loadingStats || loadingUsers || loadingProducts;
+  const categories = categoriesRes?.data || categoriesRes || [];
+  const loading = loadingStats || loadingUsers || loadingProducts || loadingCategories;
 
   useEffect(() => {
     if (!isLoggedIn || user?.role !== 'admin') {
@@ -62,12 +69,55 @@ export default function AdminDashboard() {
         const newProducts = products.filter(p => p.product_id !== deleteDialog.id);
         setProductsRes(productsRes.data ? { ...productsRes, data: newProducts } : newProducts);
         setSnackbar({ open: true, message: 'Produk berhasil dihapus', severity: 'success' });
+      } else if (deleteDialog.type === 'category') {
+        await api.delete(`/categories/${deleteDialog.id}`);
+        const newCategories = categories.filter(c => (c.category_id || c.id) !== deleteDialog.id);
+        setCategoriesRes(categoriesRes.data ? { ...categoriesRes, data: newCategories } : newCategories);
+        setSnackbar({ open: true, message: 'Kategori berhasil dihapus', severity: 'success' });
       }
     } catch (error) {
       console.error('Error deleting', error);
       setSnackbar({ open: true, message: error.response?.data?.message || 'Gagal menghapus data', severity: 'error' });
     } finally {
       setDeleteDialog({ open: false, type: '', id: null });
+    }
+  };
+
+  const handleSaveCategory = async () => {
+    try {
+      if (categoryDialog.id) {
+        await api.put(`/categories/${categoryDialog.id}`, { name: categoryDialog.name });
+        setSnackbar({ open: true, message: 'Kategori berhasil diupdate', severity: 'success' });
+      } else {
+        await api.post(`/categories`, { name: categoryDialog.name });
+        setSnackbar({ open: true, message: 'Kategori berhasil ditambahkan', severity: 'success' });
+      }
+      const newCats = await api.get('/categories');
+      setCategoriesRes(newCats.data || newCats);
+    } catch (error) {
+      setSnackbar({ open: true, message: error.response?.data?.message || 'Gagal menyimpan kategori', severity: 'error' });
+    } finally {
+      setCategoryDialog({ open: false, id: null, name: '' });
+    }
+  };
+
+  const handleSaveUser = async () => {
+    try {
+      if (userDialog.user_id) {
+        await api.put(`/admin/users/${userDialog.user_id}`, {
+          name: userDialog.name,
+          email: userDialog.email,
+          role: userDialog.role,
+          balance: Number(userDialog.balance)
+        });
+        setSnackbar({ open: true, message: 'User berhasil diupdate', severity: 'success' });
+        const newUsers = await api.get('/admin/users');
+        setUsersRes(newUsers.data || newUsers);
+      }
+    } catch (error) {
+      setSnackbar({ open: true, message: error.response?.data?.message || 'Gagal menyimpan user', severity: 'error' });
+    } finally {
+      setUserDialog({ open: false, user_id: null, name: '', email: '', role: 'buyer', balance: 0 });
     }
   };
 
@@ -189,6 +239,7 @@ export default function AdminDashboard() {
           >
             <Tab label="Users" disableRipple />
             <Tab label="Products" disableRipple />
+            <Tab label="Categories" disableRipple />
           </Tabs>
         </Box>
 
@@ -243,6 +294,13 @@ export default function AdminDashboard() {
                           </Box>
                         </TableCell>
                         <TableCell align="right" sx={{ py: 1.5, borderBottom: '1px solid #EAEAEA' }}>
+                          <Button 
+                            onClick={() => setUserDialog({ open: true, user_id: u.user_id, name: u.name, email: u.email, role: u.role, balance: u.balance || 0 })}
+                            size="small"
+                            sx={{ color: '#3B82F6', textTransform: 'none', minWidth: 'auto', p: 0.5, mr: 1, '&:hover': { bgcolor: 'transparent', color: '#2563EB' } }}
+                          >
+                            Edit
+                          </Button>
                           {u.role !== 'admin' ? (
                             <Button 
                               onClick={() => handleDeleteClick('user', u.user_id)} 
@@ -282,7 +340,14 @@ export default function AdminDashboard() {
                     
                     <Divider sx={{ mb: 1.5, borderColor: '#F5F5F5' }} />
                     
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+                      <Button 
+                        onClick={() => setUserDialog({ open: true, user_id: u.user_id, name: u.name, email: u.email, role: u.role, balance: u.balance || 0 })}
+                        size="small"
+                        sx={{ color: '#3B82F6', textTransform: 'none', minWidth: 'auto', p: 0.5, fontSize: '0.8rem' }}
+                      >
+                        Edit
+                      </Button>
                       {u.role !== 'admin' ? (
                         <Button 
                           onClick={() => handleDeleteClick('user', u.user_id)} 
@@ -404,6 +469,66 @@ export default function AdminDashboard() {
             </>
           )}
 
+          {/* TAB 2: CATEGORIES */}
+          {tab === 2 && (
+            <Box sx={{ p: { xs: 2, md: 3 } }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Typography variant="h6" fontWeight={600}>Categories</Typography>
+                <Button 
+                  variant="contained" 
+                  onClick={() => setCategoryDialog({ open: true, id: null, name: '' })}
+                  sx={{ bgcolor: '#000000', color: '#ffffff', textTransform: 'none', px: 3, borderRadius: '6px', '&:hover': { bgcolor: '#333333' } }}
+                  disableElevation
+                >
+                  Add Category
+                </Button>
+              </Box>
+
+              <TableContainer sx={{ border: '1px solid #EAEAEA', borderRadius: '8px' }}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ fontWeight: 500, color: '#666666', bgcolor: '#FAFAFA' }}>ID</TableCell>
+                      <TableCell sx={{ fontWeight: 500, color: '#666666', bgcolor: '#FAFAFA' }}>Category Name</TableCell>
+                      <TableCell align="right" sx={{ fontWeight: 500, color: '#666666', bgcolor: '#FAFAFA' }}>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {categories.map((c) => (
+                      <TableRow key={c.category_id || c.id}>
+                        <TableCell>{c.category_id || c.id}</TableCell>
+                        <TableCell fontWeight={500}>{c.name}</TableCell>
+                        <TableCell align="right">
+                          <Button 
+                            onClick={() => setCategoryDialog({ open: true, id: c.category_id || c.id, name: c.name })}
+                            size="small"
+                            sx={{ color: '#3B82F6', textTransform: 'none', mr: 1 }}
+                          >
+                            Edit
+                          </Button>
+                          <Button 
+                            onClick={() => handleDeleteClick('category', c.category_id || c.id)} 
+                            size="small"
+                            sx={{ color: '#EF4444', textTransform: 'none' }}
+                          >
+                            Remove
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {categories.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={3} align="center" sx={{ py: 6 }}>
+                          <Typography color="text.secondary">No categories found.</Typography>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+          )}
+
         </Box>
       </Container>
 
@@ -437,6 +562,163 @@ export default function AdminDashboard() {
             disableElevation
           >
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Category Dialog */}
+      <Dialog 
+        open={categoryDialog.open} 
+        onClose={() => setCategoryDialog({ open: false, id: null, name: '' })}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{ 
+          elevation: 0, 
+          sx: { 
+            borderRadius: '20px', 
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            border: '1px solid #EAEAEA',
+            p: 1
+          } 
+        }}
+      >
+        <DialogTitle sx={{ 
+          fontWeight: 800, 
+          fontSize: '1.5rem', 
+          color: '#111827',
+          p: 3, pb: 1
+        }}>
+          {categoryDialog.id ? 'Edit Kategori' : 'Tambah Kategori Baru'}
+        </DialogTitle>
+        <DialogContent sx={{ p: 3, pt: 2 }}>
+          <Typography variant="body2" sx={{ mb: 3, color: '#666666' }}>
+            {categoryDialog.id 
+              ? 'Silakan perbarui nama kategori di bawah ini.' 
+              : 'Tambahkan kategori baru untuk mempermudah organisasi produk.'}
+          </Typography>
+          <TextField
+            fullWidth
+            label="Nama Kategori"
+            variant="outlined"
+            placeholder="Contoh: Plugin WordPress"
+            value={categoryDialog.name}
+            onChange={(e) => setCategoryDialog({ ...categoryDialog, name: e.target.value })}
+            InputProps={{ sx: { borderRadius: '12px' } }}
+            InputLabelProps={{ shrink: true }}
+            autoFocus
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 3, pt: 0, gap: 1 }}>
+          <Button 
+            onClick={() => setCategoryDialog({ open: false, id: null, name: '' })}
+            sx={{ 
+              color: '#666666', 
+              textTransform: 'none', 
+              fontWeight: 600,
+              px: 3, py: 1,
+              borderRadius: '99px',
+              '&:hover': { bgcolor: '#F5F5F5' }
+            }}
+          >
+            Batal
+          </Button>
+          <Button 
+            onClick={handleSaveCategory}
+            variant="contained"
+            disabled={!categoryDialog.name}
+            disableElevation
+            sx={{ 
+              bgcolor: '#111827', 
+              color: '#ffffff', 
+              textTransform: 'none', 
+              fontWeight: 600,
+              px: 4, py: 1,
+              borderRadius: '99px',
+              '&:hover': { bgcolor: '#000000' }, 
+              '&.Mui-disabled': { bgcolor: '#F3F4F6', color: '#9CA3AF' }
+            }}
+          >
+            Simpan Kategori
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* User Dialog */}
+      <Dialog 
+        open={userDialog.open} 
+        onClose={() => setUserDialog({ open: false, user_id: null, name: '', email: '', role: 'buyer', balance: 0 })}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{ 
+          elevation: 0, 
+          sx: { 
+            borderRadius: '20px', 
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            border: '1px solid #EAEAEA',
+            p: 1
+          } 
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 800, fontSize: '1.5rem', color: '#111827', p: 3, pb: 1 }}>
+          Edit User
+        </DialogTitle>
+        <DialogContent sx={{ p: 3, pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <TextField
+            fullWidth
+            label="Name"
+            variant="outlined"
+            value={userDialog.name}
+            onChange={(e) => setUserDialog({ ...userDialog, name: e.target.value })}
+            InputProps={{ sx: { borderRadius: '12px' } }}
+            InputLabelProps={{ shrink: true }}
+          />
+          <TextField
+            fullWidth
+            label="Email"
+            variant="outlined"
+            value={userDialog.email}
+            onChange={(e) => setUserDialog({ ...userDialog, email: e.target.value })}
+            InputProps={{ sx: { borderRadius: '12px' } }}
+            InputLabelProps={{ shrink: true }}
+          />
+          <TextField
+            select
+            fullWidth
+            label="Role"
+            value={userDialog.role}
+            onChange={(e) => setUserDialog({ ...userDialog, role: e.target.value })}
+            InputProps={{ sx: { borderRadius: '12px' } }}
+            SelectProps={{ native: true }}
+          >
+            <option value="buyer">Buyer</option>
+            <option value="seller">Seller</option>
+            <option value="admin">Admin</option>
+          </TextField>
+          <TextField
+            fullWidth
+            label="Balance (Saldo)"
+            variant="outlined"
+            type="number"
+            value={userDialog.balance}
+            onChange={(e) => setUserDialog({ ...userDialog, balance: e.target.value })}
+            InputProps={{ sx: { borderRadius: '12px' } }}
+            InputLabelProps={{ shrink: true }}
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 3, pt: 0, gap: 1 }}>
+          <Button 
+            onClick={() => setUserDialog({ open: false, user_id: null, name: '', email: '', role: 'buyer', balance: 0 })}
+            sx={{ color: '#666666', textTransform: 'none', fontWeight: 600, px: 3, py: 1, borderRadius: '99px', '&:hover': { bgcolor: '#F5F5F5' } }}
+          >
+            Batal
+          </Button>
+          <Button 
+            onClick={handleSaveUser}
+            variant="contained"
+            disableElevation
+            sx={{ bgcolor: '#111827', color: '#ffffff', textTransform: 'none', fontWeight: 600, px: 4, py: 1, borderRadius: '99px', '&:hover': { bgcolor: '#000000' } }}
+          >
+            Simpan Perubahan
           </Button>
         </DialogActions>
       </Dialog>

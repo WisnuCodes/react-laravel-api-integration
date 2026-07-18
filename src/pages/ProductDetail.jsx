@@ -27,6 +27,7 @@ export default function ProductDetail() {
 
   const { data: product, loading: productLoading, error: productError, setData: setProduct } = useFetch(`/products/${id}`, null, 3000);
   const { data: reviews, loading: reviewsLoading, setData: setReviews } = useFetch(`/products/${id}/reviews`, [], 3000);
+  const { data: libraryRes } = useFetch(isLoggedIn && user?.role === 'buyer' ? '/buyer/library' : null, []);
 
   const loading = productLoading || reviewsLoading;
   const error = productError;
@@ -105,6 +106,9 @@ export default function ProductDetail() {
   }
 
   const hasReviewed = reviews.some(r => r.buyer_id === user?.user_id);
+
+  const library = libraryRes?.data || libraryRes || [];
+  const purchasedItem = library.find(item => item.product_id === product?.id || item.product_id === product?.product_id);
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
@@ -210,38 +214,67 @@ export default function ProductDetail() {
                 </Alert>
               )}
               <Box sx={{ display: 'flex', gap: 2 }}>
-                <Button
-                  variant="contained"
-                  startIcon={<ShoppingCartIcon />}
-                  disabled={cartLoading}
-                  onClick={async () => {
-                    setCartLoading(true);
-                    setCartMsg({ type: '', text: '' });
-                    try {
-                      await addToCart(product.id);
-                      setCartMsg({ type: 'success', text: 'Ditambahkan ke keranjang!' });
-                    } catch (err) {
-                      setCartMsg({ type: 'error', text: err.message || 'Gagal menambahkan.' });
-                    } finally {
-                      setCartLoading(false);
-                    }
-                  }}
-                  disableElevation
-                  sx={{
-                    bgcolor: '#111827',
-                    color: '#ffffff',
-                    textTransform: 'none',
-                    fontWeight: 600,
-                    fontSize: '1rem',
-                    borderRadius: '12px',
-                    px: 4,
-                    py: 1.5,
-                    flexGrow: 1,
-                    '&:hover': { bgcolor: '#1F2937' },
-                  }}
-                >
-                  {cartLoading ? 'Menambahkan...' : 'Tambah ke Keranjang'}
-                </Button>
+                {purchasedItem ? (
+                  <Button
+                    variant="contained"
+                    startIcon={<DownloadIcon />}
+                    onClick={() => {
+                      if (purchasedItem.file_url) {
+                        window.open(purchasedItem.file_url, '_blank');
+                      } else {
+                        alert('File belum tersedia untuk diunduh.');
+                      }
+                    }}
+                    disableElevation
+                    sx={{
+                      bgcolor: '#10B981',
+                      color: '#ffffff',
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      borderRadius: '12px',
+                      px: 4,
+                      py: 1.5,
+                      flexGrow: 1,
+                      '&:hover': { bgcolor: '#059669' },
+                    }}
+                  >
+                    Download Source
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    startIcon={<ShoppingCartIcon />}
+                    disabled={cartLoading}
+                    onClick={async () => {
+                      setCartLoading(true);
+                      setCartMsg({ type: '', text: '' });
+                      try {
+                        await addToCart(product.id || product.product_id);
+                        setCartMsg({ type: 'success', text: 'Ditambahkan ke keranjang!' });
+                      } catch (err) {
+                        setCartMsg({ type: 'error', text: err.message || 'Gagal menambahkan.' });
+                      } finally {
+                        setCartLoading(false);
+                      }
+                    }}
+                    disableElevation
+                    sx={{
+                      bgcolor: '#111827',
+                      color: '#ffffff',
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      borderRadius: '12px',
+                      px: 4,
+                      py: 1.5,
+                      flexGrow: 1,
+                      '&:hover': { bgcolor: '#1F2937' },
+                    }}
+                  >
+                    {cartLoading ? 'Menambahkan...' : 'Tambah ke Keranjang'}
+                  </Button>
+                )}
                 
                 <IconButton
                   className={isWishlisted(product.id) ? "btn-liked-ring" : ""}

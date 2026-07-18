@@ -2,6 +2,8 @@
 
 A modern, high-performance, and visually stunning e-commerce frontend built with React, Vite, and Material-UI (MUI). It features an elegant user interface, sophisticated micro-animations, and full integration with a robust Laravel REST API backend.
 
+🔗 **Backend Repository:** [WisnuCodes/order-management-api](https://github.com/WisnuCodes/order-management-api)
+
 ## ✨ Key Features
 
 *   **Modern Premium UI/UX:**

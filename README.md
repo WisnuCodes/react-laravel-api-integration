@@ -1,112 +1,69 @@
-# React Laravel API Integration
+# Dibitech - E-Commerce React Application (Frontend)
 
-A frontend application built with **React** and **Vite** that integrates with a **Laravel REST API**. The application demonstrates user authentication, protected routes, user management, and product catalog features while following a modern component-based architecture.
+A modern, high-performance, and visually stunning e-commerce frontend built with React, Vite, and Material-UI (MUI). It features an elegant user interface, sophisticated micro-animations, and full integration with a robust Laravel REST API backend.
 
----
+## ✨ Key Features
 
-## Overview
+*   **Modern Premium UI/UX:**
+    *   Beautiful, scalable product grid and responsive layouts.
+    *   Custom CSS keyframe micro-animations (e.g., Heartburst and Ripple Ring effects for the wishlist).
+    *   Sleek Material-UI (MUI) integration customized with a professional color palette.
+*   **Role-Based Dashboards:**
+    *   **Admin Dashboard:** High-level overview of users, products, categories, and real-time system statistics.
+    *   **Seller Dashboard:** Secure product management (Create, Read, Update, Delete) and order tracking.
+    *   **Buyer Experience:** Intuitive catalog browsing, interactive Cart management, and seamless Wishlist.
+*   **Advanced State Management (Context API):**
+    *   `AuthContext`: Global user authentication, role management, and session handling.
+    *   `CartContext`: Real-time cart synchronization and checkout logic.
+    *   `WishlistContext`: Optimistic UI updates for instant, zero-delay favorite toggling.
+*   **Optimized Performance & DRY Principles:**
+    *   Built with Vite for blazing-fast Hot Module Replacement (HMR) and optimized production builds.
+    *   Custom Hooks (`useFetch`, `useMutation`, `useSearch`) abstracting complex data fetching logic.
+    *   Axios Interceptors for automatic bearer token injection and centralized error handling.
 
-This project serves as the frontend client for a Laravel REST API. It communicates with the backend using Axios, manages authentication through Laravel Sanctum, and provides a responsive user interface built with Material UI.
+## 🛠️ Technology Stack
 
----
+*   **Core:** React 18, Vite
+*   **Routing:** React Router v6
+*   **UI/Styling:** Material-UI (MUI), Emotion, Custom Vanilla CSS Keyframes
+*   **State Management:** React Context API
+*   **HTTP Client:** Axios
 
-## Features
+## 📦 Installation & Local Development
 
-* User authentication with Laravel Sanctum
-* Login and registration
-* Automatic login after successful registration
-* Protected routes for authenticated users
-* User list with pagination
-* User detail page
-* Product catalog
-* Automatic token management using Axios Interceptors
-* Global authentication state using React Context API
-* Responsive user interface with Material UI
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/WisnuCodes/react-laravel-api-integration.git
+    cd react-laravel-api-integration
+    ```
 
----
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-## Tech Stack
+3.  **Environment Variables:**
+    Create a `.env` file in the root directory (or use `.env.production` for production).
+    ```env
+    VITE_API_URL=http://localhost:8000/api
+    ```
 
-| Technology        | Description                            |
-| ----------------- | -------------------------------------- |
-| React             | Frontend library                       |
-| Vite              | Build tool and development server      |
-| React Router DOM  | Client-side routing                    |
-| Material UI       | UI component library                   |
-| Emotion           | Styling engine for Material UI         |
-| Axios             | HTTP client for REST API communication |
-| React Context API | Global authentication state management |
-| ESLint            | Code linting and quality assurance     |
+4.  **Run Development Server:**
+    ```bash
+    npm run dev
+    ```
+    *The app will be accessible at `http://localhost:5173`.*
 
----
+> **Note:** Ensure the backend API (Laravel) is running locally at `http://localhost:8000` to fetch real data.
 
-## Installation
+## 📁 Project Structure Highlights
 
-Clone the repository:
-
-```bash
-git clone https://github.com/WisnuCodes/react-laravel-api-integration.git
-cd react-laravel-api-integration
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-The application will be available at:
-
-```text
-http://localhost:5173
-```
-
-Before running the frontend application, ensure that the Laravel backend is running at `http://localhost:8000`.
+*   `src/api/client.js` - Global Axios instance with automatic token interceptors.
+*   `src/components/` - Structured using Atomic Design principles (`atoms/`, `molecules/`, `organisms/`).
+*   `src/context/` - Global context providers (`AuthContext.jsx`, `CartContext.jsx`, `WishlistContext.jsx`).
+*   `src/hooks/` - Reusable custom hooks for declarative API interactions.
+*   `src/pages/` - Role-specific page components (AdminDashboard, Cart, Landing, Products, etc.).
+*   `src/App.css` - Custom premium animations and utility classes.
 
 ---
-
-## API Endpoints
-
-| Method | Endpoint          | Description                   |
-| ------ | ----------------- | ----------------------------- |
-| POST   | `/api/login`      | Authenticate a user           |
-| POST   | `/api/register`   | Register a new user           |
-| POST   | `/api/logout`     | Logout the authenticated user |
-| GET    | `/api/users`      | Retrieve all users            |
-| GET    | `/api/users/{id}` | Retrieve user details         |
-| GET    | `/api/products`   | Retrieve product catalog      |
-
----
-
-## Repositories
-
-### Frontend
-
-* https://github.com/WisnuCodes/react-laravel-api-integration
-
-### Backend
-
-* https://github.com/WisnuCodes/order-management-api
-
----
-
-## Notes
-
-* Authentication is implemented using Laravel Sanctum.
-* Access tokens are automatically attached to authenticated requests using Axios Interceptors.
-* Authentication state is managed globally with React Context API.
-* The project follows a reusable, component-based architecture for better scalability and maintainability.
-
----
-
-## Author
-
-**Wisnu Nugraha**
-
-GitHub: https://github.com/WisnuCodes
+**Author:** Wisnu Nugraha

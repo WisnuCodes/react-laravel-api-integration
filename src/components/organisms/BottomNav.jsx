@@ -156,6 +156,48 @@ export default function BottomNav() {
         </Box>
         <Divider />
         <List sx={{ px: 2, mt: 1 }}>
+          {isLoggedIn && user?.role === 'admin' && (
+            <ListItem disablePadding sx={{ mb: 1 }}>
+              <Button
+                fullWidth
+                component={Link}
+                to="/users"
+                variant="text"
+                onClick={() => setDrawerOpen(false)}
+                startIcon={<PersonIcon />}
+                sx={{ 
+                  color: '#111827', 
+                  justifyContent: 'flex-start',
+                  px: 2, py: 1.5, fontWeight: 600, borderRadius: '12px',
+                  '&:hover': { bgcolor: '#f3f4f6' }
+                }}
+              >
+                Daftar Pengguna
+              </Button>
+            </ListItem>
+          )}
+
+          {isLoggedIn && user?.role === 'buyer' && (
+            <ListItem disablePadding sx={{ mb: 1 }}>
+              <Button
+                fullWidth
+                component={Link}
+                to="/wishlist"
+                variant="text"
+                onClick={() => setDrawerOpen(false)}
+                startIcon={<SearchOutlinedIcon />}
+                sx={{ 
+                  color: '#111827', 
+                  justifyContent: 'flex-start',
+                  px: 2, py: 1.5, fontWeight: 600, borderRadius: '12px',
+                  '&:hover': { bgcolor: '#f3f4f6' }
+                }}
+              >
+                Koleksi Favorit
+              </Button>
+            </ListItem>
+          )}
+
           <ListItem disablePadding sx={{ mb: 1 }}>
             <Button
               fullWidth
@@ -165,11 +207,7 @@ export default function BottomNav() {
               sx={{ 
                 color: '#ef4444', 
                 justifyContent: 'flex-start',
-                px: 2,
-                py: 1.5,
-                fontWeight: 600,
-                bgcolor: '#fef2f2',
-                borderRadius: '12px'
+                px: 2, py: 1.5, fontWeight: 600, bgcolor: '#fef2f2', borderRadius: '12px'
               }}
             >
               Keluar Akun

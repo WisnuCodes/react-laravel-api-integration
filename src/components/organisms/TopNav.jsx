@@ -30,6 +30,7 @@ import Logo from '../atoms/Logo';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { useFetch } from '../../hooks/useFetch';
 
 export default function TopNav() {
   const location = useLocation();
@@ -37,6 +38,9 @@ export default function TopNav() {
   const { user, isLoggedIn, logout } = useAuth();
   const { itemCount } = useCart();
   const { wishlistItems } = useWishlist();
+
+  // Fetch categories for Mega Menu
+  const { data: categories } = useFetch('/categories', [], 300000);
 
   // State for Avatar Menu
   const [anchorEl, setAnchorEl] = useState(null);
@@ -363,33 +367,29 @@ export default function TopNav() {
             </Typography>
             
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Button
-                component={Link}
-                to="/products"
-                onClick={handleMegaClose}
-                startIcon={<AutoFixHighIcon sx={{ color: '#111827' }} />}
-                sx={{ justifyContent: 'flex-start', color: '#4B5563', fontWeight: 600, p: 1.5, borderRadius: '12px', '&:hover': { bgcolor: '#F3F4F6', color: '#111827' } }}
-              >
-                Template UI & Desain Website
-              </Button>
-              <Button
-                component={Link}
-                to="/products"
-                onClick={handleMegaClose}
-                startIcon={<CodeIcon sx={{ color: '#111827' }} />}
-                sx={{ justifyContent: 'flex-start', color: '#4B5563', fontWeight: 600, p: 1.5, borderRadius: '12px', '&:hover': { bgcolor: '#F3F4F6', color: '#111827' } }}
-              >
-                Source Code (React, Laravel, Vue)
-              </Button>
-              <Button
-                component={Link}
-                to="/products"
-                onClick={handleMegaClose}
-                startIcon={<DiamondIcon sx={{ color: '#111827' }} />}
-                sx={{ justifyContent: 'flex-start', color: '#4B5563', fontWeight: 600, p: 1.5, borderRadius: '12px', '&:hover': { bgcolor: '#F3F4F6', color: '#111827' } }}
-              >
-                Aset 3D & Ilustrasi Premium
-              </Button>
+              {categories && categories.length > 0 ? categories.slice(0, 4).map((cat, idx) => {
+                const icons = [<AutoFixHighIcon />, <CodeIcon />, <DiamondIcon />, <StorefrontIcon />];
+                return (
+                  <Button
+                    key={cat.id || idx}
+                    component={Link}
+                    to={`/products?category=${cat.id}`}
+                    onClick={handleMegaClose}
+                    startIcon={icons[idx % icons.length]}
+                    sx={{ 
+                      justifyContent: 'flex-start', color: '#4B5563', fontWeight: 600, p: 1.5, 
+                      borderRadius: '12px', '&:hover': { bgcolor: '#F3F4F6', color: '#111827' },
+                      '& .MuiButton-startIcon': { color: '#111827' }
+                    }}
+                  >
+                    {cat.name}
+                  </Button>
+                );
+              }) : (
+                <Typography variant="body2" color="#9CA3AF" sx={{ p: 2 }}>
+                  Belum ada kategori tersedia.
+                </Typography>
+              )}
             </Box>
           </Grid>
         </Grid>

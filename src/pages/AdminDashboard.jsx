@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { 
   Box, Typography, Container, Grid, Card, CardContent, 
   Tabs, Tab, Table, TableBody, TableCell, TableContainer, 
-  TableHead, TableRow, Paper, IconButton, Chip, CircularProgress,
   Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button,
+  Avatar, Stack, Snackbar, Alert
   Avatar, Stack
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -20,6 +20,7 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const [tab, setTab] = useState(0);
   const [deleteDialog, setDeleteDialog] = useState({ open: false, type: '', id: null });
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const { data: statsRes, loading: loadingStats } = useFetch(
     isLoggedIn && user?.role === 'admin' ? '/admin/stats' : null, 
@@ -55,14 +56,16 @@ export default function AdminDashboard() {
         await api.delete(`/admin/users/${deleteDialog.id}`);
         const newUsers = users.filter(u => u.user_id !== deleteDialog.id);
         setUsersRes(usersRes.data ? { ...usersRes, data: newUsers } : newUsers);
+        setSnackbar({ open: true, message: 'Pengguna berhasil dihapus', severity: 'success' });
       } else if (deleteDialog.type === 'product') {
         await api.delete(`/admin/products/${deleteDialog.id}`);
         const newProducts = products.filter(p => p.product_id !== deleteDialog.id);
         setProductsRes(productsRes.data ? { ...productsRes, data: newProducts } : newProducts);
+        setSnackbar({ open: true, message: 'Produk berhasil dihapus', severity: 'success' });
       }
     } catch (error) {
       console.error('Error deleting', error);
-      alert(error.response?.data?.message || 'Gagal menghapus data');
+      setSnackbar({ open: true, message: error.response?.data?.message || 'Gagal menghapus data', severity: 'error' });
     } finally {
       setDeleteDialog({ open: false, type: '', id: null });
     }
@@ -306,7 +309,15 @@ export default function AdminDashboard() {
                     </TableRow>
                   ))}
                   {products.length === 0 && (
-                    <TableRow><TableCell colSpan={5} align="center" sx={{ py: 6, color: '#9CA3AF' }}>Belum ada data produk</TableCell></TableRow>
+                    <TableRow>
+                      <TableCell colSpan={5} align="center" sx={{ py: 8 }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0.6 }}>
+                          <StorefrontIcon sx={{ fontSize: 60, mb: 2, color: '#9CA3AF' }} />
+                          <Typography variant="h6" fontWeight={700} color="#4B5563">Tidak ada data produk</Typography>
+                          <Typography variant="body2" color="#6B7280">Produk yang terdaftar akan muncul di tabel ini.</Typography>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
                   )}
                 </TableBody>
               </Table>
@@ -349,6 +360,17 @@ export default function AdminDashboard() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar 
+        open={snackbar.open} 
+        autoHideDuration={4000} 
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert severity={snackbar.severity} sx={{ width: '100%', borderRadius: '12px', fontWeight: 600 }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

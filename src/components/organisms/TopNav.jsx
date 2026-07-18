@@ -270,19 +270,45 @@ export default function TopNav() {
                   PaperProps={{
                     elevation: 0,
                     sx: {
-                      overflow: 'visible', filter: 'drop-shadow(0px 8px 24px rgba(0,0,0,0.1))',
-                      mt: 1, minWidth: 200, borderRadius: '16px', border: '1px solid #E5E7EB'
+                      overflow: 'visible', 
+                      filter: 'drop-shadow(0px 12px 32px rgba(0,0,0,0.12))',
+                      mt: 1.5, 
+                      minWidth: 260, 
+                      borderRadius: '16px', 
+                      border: '1px solid #E5E7EB',
+                      p: 1
                     },
                   }}
                 >
-                  <Box sx={{ px: 2.5, py: 1.5 }}>
-                    <Typography variant="subtitle2" fontWeight={800} noWrap>{user?.name}</Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>{user?.email}</Typography>
+                  <Box sx={{ px: 2, py: 1.5, display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Avatar sx={{ width: 48, height: 48, bgcolor: '#F3F4F6', color: '#111827', fontWeight: 800, fontSize: '1.2rem', border: '1px solid #E5E7EB' }}>
+                      {user?.name?.charAt(0)?.toUpperCase()}
+                    </Avatar>
+                    <Box sx={{ overflow: 'hidden' }}>
+                      <Typography variant="subtitle1" fontWeight={800} noWrap sx={{ color: '#111827', lineHeight: 1.2, mb: 0.2 }}>
+                        {user?.name}
+                      </Typography>
+                      <Typography variant="body2" color="#6B7280" noWrap sx={{ fontSize: '0.85rem' }}>
+                        {user?.email}
+                      </Typography>
+                    </Box>
                   </Box>
-                  <Divider sx={{ mb: 1 }} />
-                  <MenuItem onClick={handleLogout} sx={{ py: 1.5, px: 2, color: '#EF4444' }}>
-                    <ListItemIcon><LogoutIcon fontSize="small" sx={{ color: '#EF4444' }} /></ListItemIcon>
-                    <Typography fontWeight={600} fontSize="0.9rem">Keluar Akun</Typography>
+                  <Divider sx={{ my: 1, borderColor: '#F3F4F6' }} />
+                  <MenuItem 
+                    onClick={handleLogout} 
+                    sx={{ 
+                      py: 1.5, 
+                      px: 2, 
+                      borderRadius: '10px', 
+                      mx: 1, 
+                      mb: 0.5,
+                      color: '#EF4444',
+                      transition: 'all 0.2s',
+                      '&:hover': { bgcolor: '#FEF2F2', color: '#DC2626' }
+                    }}
+                  >
+                    <ListItemIcon><LogoutIcon fontSize="small" sx={{ color: 'inherit' }} /></ListItemIcon>
+                    <Typography fontWeight={600} fontSize="0.95rem">Keluar Akun</Typography>
                   </MenuItem>
                 </Menu>
               </>

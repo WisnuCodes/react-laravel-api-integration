@@ -1,12 +1,11 @@
-import { useState } from 'react';
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Box, AppBar, Toolbar, IconButton, Badge } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Sidebar from './components/organisms/Sidebar';
+import { Box } from '@mui/material';
+import TopNav from './components/organisms/TopNav';
+import BottomNav from './components/organisms/BottomNav';
 import Footer from './components/organisms/Footer';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -19,9 +18,6 @@ import SellerDashboard from './pages/SellerDashboard';
 import Cart from './pages/Cart';
 import Landing from './pages/Landing';
 import AdminDashboard from './pages/AdminDashboard';
-import Logo from './components/atoms/Logo';
-import { useAuth } from './context/AuthContext';
-import { useCart } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 import Wishlist from './pages/Wishlist';
 import './App.css';
@@ -44,23 +40,11 @@ const theme = createTheme({
 
 function AppContent() {
   const location = useLocation();
-  const navigate = useNavigate();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const { user, isLoggedIn } = useAuth();
-  const { itemCount } = useCart();
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
 
   const hideLayout = location.pathname === '/login' || location.pathname === '/register';
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#ffffff' }}>
-
-      {!hideLayout && (
-        <Sidebar mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
-      )}
 
       <Box 
         component="main" 
@@ -72,40 +56,9 @@ function AppContent() {
           minHeight: '100vh'
         }}
       >
-        {!hideLayout && (
-          <AppBar 
-            position="sticky" 
-            elevation={0} 
-            sx={{ 
-              bgcolor: '#ffffff', 
-              borderBottom: '1px solid #e5e7eb',
-              color: '#000000'
-            }}
-          >
-            <Toolbar sx={{ px: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-              <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerToggle}>
-                <MenuIcon />
-              </IconButton>
-              <Logo />
-              <Box sx={{ flexGrow: 1 }} />
-              {isLoggedIn && user?.role === 'buyer' && (
-                <IconButton
-                  color="inherit"
-                  onClick={() => navigate('/cart')}
-                  sx={{
-                    '&:hover': { bgcolor: '#f3f4f6' },
-                  }}
-                >
-                  <Badge badgeContent={itemCount} color="error" max={99}>
-                    <ShoppingCartIcon />
-                  </Badge>
-                </IconButton>
-              )}
-            </Toolbar>
-          </AppBar>
-        )}
+        {!hideLayout && <TopNav />}
 
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1, pb: { xs: hideLayout ? 0 : 8, md: 0 } }}>
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
@@ -123,6 +76,7 @@ function AppContent() {
         </Box>
 
         {!hideLayout && <Footer />}
+        {!hideLayout && <BottomNav />}
       </Box>
     </Box>
   );

@@ -21,7 +21,7 @@ export default function Landing() {
 
       <Box 
         sx={{ 
-          pt: { xs: 12, md: 18 }, 
+          pt: { xs: 6, md: 12 }, 
           pb: { xs: 10, md: 14 }, 
           px: 3, 
           position: 'relative',

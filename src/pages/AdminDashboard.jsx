@@ -6,10 +6,10 @@ import {
   Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button,
   Avatar, Stack
 } from '@mui/material';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
-import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
-import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
+import DeleteIcon from '@mui/icons-material/Delete';
+import PeopleIcon from '@mui/icons-material/People';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -106,7 +106,7 @@ export default function AdminDashboard() {
               <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                   <Avatar sx={{ bgcolor: '#e0f2fe', color: '#0ea5e9', width: 48, height: 48, mr: 2 }}>
-                    <PeopleAltOutlinedIcon />
+                    <PeopleIcon />
                   </Avatar>
                   <Typography variant="overline" sx={{ color: '#6B7280', fontWeight: 700, letterSpacing: '0.05em' }}>TOTAL USERS</Typography>
                 </Box>
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
               <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                   <Avatar sx={{ bgcolor: '#d1fae5', color: '#10b981', width: 48, height: 48, mr: 2 }}>
-                    <StorefrontOutlinedIcon />
+                    <StorefrontIcon />
                   </Avatar>
                   <Typography variant="overline" sx={{ color: '#6B7280', fontWeight: 700, letterSpacing: '0.05em' }}>TOTAL PRODUK</Typography>
                 </Box>
@@ -150,7 +150,7 @@ export default function AdminDashboard() {
               <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                   <Avatar sx={{ bgcolor: '#ede9fe', color: '#8b5cf6', width: 48, height: 48, mr: 2 }}>
-                    <ShoppingBagOutlinedIcon />
+                    <ShoppingBagIcon />
                   </Avatar>
                   <Typography variant="overline" sx={{ color: '#6B7280', fontWeight: 700, letterSpacing: '0.05em' }}>TOTAL PESANAN</Typography>
                 </Box>
@@ -247,7 +247,7 @@ export default function AdminDashboard() {
                             sx={{ color: '#EF4444', bgcolor: '#FEF2F2', '&:hover': { bgcolor: '#FEE2E2' }, borderRadius: '8px' }} 
                             size="small"
                           >
-                            <DeleteOutlineIcon fontSize="small" />
+                            <DeleteIcon fontSize="small" />
                           </IconButton>
                         ) : (
                           <Typography variant="caption" color="text.secondary" fontWeight={600}>RESTRICTED</Typography>
@@ -300,7 +300,7 @@ export default function AdminDashboard() {
                           sx={{ color: '#EF4444', bgcolor: '#FEF2F2', '&:hover': { bgcolor: '#FEE2E2' }, borderRadius: '8px' }} 
                           size="small"
                         >
-                          <DeleteOutlineIcon fontSize="small" />
+                          <DeleteIcon fontSize="small" />
                         </IconButton>
                       </TableCell>
                     </TableRow>

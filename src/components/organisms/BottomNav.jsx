@@ -58,7 +58,7 @@ export default function BottomNav() {
           bottom: 0, 
           left: 0, 
           right: 0, 
-          zIndex: (theme) => theme.zIndex.drawer + 2,
+          zIndex: (theme) => theme.zIndex.appBar,
           display: { xs: 'block', md: 'none' }, // Only show on mobile
           borderTop: '1px solid #e5e7eb',
           pb: 'env(safe-area-inset-bottom)' // iOS Safe area

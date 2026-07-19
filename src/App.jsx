@@ -20,6 +20,7 @@ import Cart from './pages/Cart';
 import Landing from './pages/Landing';
 import AdminDashboard from './pages/AdminDashboard';
 import { WishlistProvider } from './context/WishlistContext';
+import { FollowProvider } from './context/FollowContext';
 import Wishlist from './pages/Wishlist';
 import Profile from './pages/Profile';
 import Messages from './pages/Messages';
@@ -100,9 +101,11 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <WishlistProvider>
-            <BrowserRouter>
-              <AppContent />
-            </BrowserRouter>
+            <FollowProvider>
+              <BrowserRouter>
+                <AppContent />
+              </BrowserRouter>
+            </FollowProvider>
           </WishlistProvider>
         </CartProvider>
       </AuthProvider>

@@ -174,17 +174,53 @@ export default function ProductDetail() {
           </Typography>
 
           {product.seller?.name && (
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-              Dibuat oleh{' '}
-              <Box 
+            <Box 
+              sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                bgcolor: '#F9FAFB', 
+                p: 2.5, 
+                borderRadius: 3, 
+                mb: 4, 
+                border: '1px solid #E5E7EB',
+                flexWrap: 'wrap',
+                gap: 2
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Avatar 
+                  sx={{ width: 50, height: 50, bgcolor: '#111827', fontWeight: 700 }}
+                >
+                  {product.seller.name.charAt(0).toUpperCase()}
+                </Avatar>
+                <Box>
+                  <Typography variant="caption" sx={{ color: '#6B7280', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                    Kreator
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ color: '#111827', fontWeight: 800, lineHeight: 1.2 }}>
+                    {product.seller.name}
+                  </Typography>
+                </Box>
+              </Box>
+              
+              <Button 
                 component={Link} 
                 to={product.seller.username ? `/store/${product.seller.username}` : '#'}
-                fontWeight="700" 
-                sx={{ color: '#111827', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+                variant="outlined" 
+                endIcon={<StorefrontIcon />}
+                sx={{ 
+                  color: '#111827', 
+                  borderColor: '#D1D5DB', 
+                  textTransform: 'none', 
+                  fontWeight: 600,
+                  borderRadius: '12px',
+                  '&:hover': { bgcolor: '#F3F4F6', borderColor: '#9CA3AF' }
+                }}
               >
-                {product.seller.name}
-              </Box>
-            </Typography>
+                Kunjungi Toko
+              </Button>
+            </Box>
           )}
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4, flexWrap: 'wrap' }}>

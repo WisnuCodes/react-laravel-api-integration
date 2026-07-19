@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import {
   Box,
@@ -119,7 +119,7 @@ function StoreProfile() {
               <Grid item xs={12} sm={6} md={4} key={product.id}>
                 <Card 
                   component={RouterLink} 
-                  to={`/product/${product.id}`}
+                  to={`/products/${product.id}`}
                   sx={{ 
                     height: '100%',
                     display: 'flex', 

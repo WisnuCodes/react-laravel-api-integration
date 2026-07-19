@@ -15,7 +15,6 @@ import Users from './pages/Users';
 import UserDetail from './pages/UserDetail';
 import Orders from './pages/Orders';
 import Library from './pages/Library';
-import UserDashboard from './pages/UserDashboard';
 import SellerDashboard from './pages/SellerDashboard';
 import Cart from './pages/Cart';
 import Landing from './pages/Landing';

@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { apiRequest } from '../api/client';
-import { Box, Button, TextField, Typography, Alert, Grid } from '@mui/material';
+import { Box, Button, TextField, Typography, Alert, InputAdornment, IconButton, CircularProgress, Divider } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Logo from '../components/atoms/Logo';
 
 export default function Login() {
@@ -10,6 +11,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -38,143 +40,242 @@ export default function Login() {
     }
   };
 
+  const inputStyles = {
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '8px',
+      backgroundColor: '#fcfcfd',
+      transition: 'all 0.2s',
+      '& fieldset': {
+        borderColor: '#e4e4e7',
+        borderWidth: '1px',
+      },
+      '&:hover fieldset': {
+        borderColor: '#a1a1aa',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#09090b',
+        borderWidth: '2px',
+      },
+      '&.Mui-focused': {
+        backgroundColor: '#ffffff',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.03)',
+      },
+      '& input': {
+        padding: '13px 14px',
+        fontSize: '0.95rem',
+        fontWeight: 500,
+        color: '#09090b',
+        fontFamily: '"Plus Jakarta Sans", sans-serif',
+      }
+    },
+    '& .MuiInputLabel-root': {
+      color: '#71717a',
+      fontSize: '0.95rem',
+      fontWeight: 500,
+      fontFamily: '"Plus Jakarta Sans", sans-serif',
+      transform: 'translate(14px, 13px) scale(1)',
+      '&.Mui-focused, &.MuiFormLabel-filled': {
+        transform: 'translate(14px, -9px) scale(0.85)',
+        color: '#09090b',
+        fontWeight: 700,
+        backgroundColor: '#ffffff',
+        padding: '0 6px',
+        borderRadius: '4px'
+      }
+    }
+  };
+
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', bgcolor: { xs: '#f9fafb', md: '#ffffff' } }}>
-      <Grid container>
+    <Box 
+      sx={{ 
+        minHeight: '100vh', 
+        display: 'flex', 
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: '#f4f4f5',
+        position: 'relative',
+        p: 3,
+        overflow: 'hidden'
+      }}
+    >
+      {/* Distinct Professional "Engineering" Grid Pattern */}
+      <Box sx={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: 'radial-gradient(#d4d4d8 1px, transparent 1px)',
+        backgroundSize: '24px 24px',
+        opacity: 0.6,
+        pointerEvents: 'none'
+      }} />
 
-        {/* Desktop Left Side */}
-        <Grid 
-          item 
-          xs={12} 
-          md={5} 
+      <Box 
+        sx={{ 
+          width: '100%', 
+          maxWidth: 440, 
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          position: 'relative',
+          zIndex: 1
+        }}
+      >
+        <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: '#ffffff', px: 3, py: 1.5, borderRadius: '100px', border: '1px solid #e4e4e7', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+          <Logo color="#09090b" />
+          <Divider orientation="vertical" flexItem sx={{ borderColor: '#e4e4e7', my: 0.5 }} />
+          <Typography variant="body2" sx={{ fontWeight: 600, color: '#09090b', letterSpacing: '0.05em' }}>
+            PORTAL
+          </Typography>
+        </Box>
+
+        <Box 
           sx={{ 
-            display: { xs: 'none', md: 'flex' },
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            bgcolor: '#000000',
-            color: '#ffffff',
-            p: 6,
-          }}
-        >
-          <Box>
-            <Logo color="#ffffff" />
-          </Box>
-          <Box>
-            <Typography variant="h3" fontWeight={700} sx={{ letterSpacing: '-0.03em', mb: 2, lineHeight: 1.2 }}>
-              Akses cepat. <br />
-              Kerja tepat.
-            </Typography>
-            <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.7)' }}>
-              Masuk ke akun Anda untuk menemukan ribuan aset digital premium dan kelola transaksi dengan mudah.
-            </Typography>
-          </Box>
-        </Grid>
-
-        {/* Right Side (Form) */}
-        <Grid 
-          item 
-          xs={12} 
-          md={7} 
-          sx={{ 
-            display: 'flex', 
-            flexDirection: 'column',
-            alignItems: 'center', 
-            justifyContent: 'center',
-            p: { xs: 2, sm: 6, md: 10 }
-          }}
-        >
-          {/* Mobile Logo */}
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, mb: 4, mt: 4 }}>
-            <Logo color="#111827" />
-          </Box>
-
-          <Box sx={{ 
-            width: '100%', 
-            maxWidth: 440,
+            width: '100%',
             bgcolor: '#ffffff',
-            p: { xs: 4, md: 0 },
-            borderRadius: { xs: '24px', md: 0 },
-            boxShadow: { xs: '0 20px 40px -15px rgba(0,0,0,0.05)', md: 'none' },
-            border: { xs: '1px solid #e5e7eb', md: 'none' }
-          }}>
-            <Typography variant="h4" component="h1" gutterBottom sx={{ color: '#111827', fontWeight: 800, letterSpacing: '-0.03em' }}>
-              Welcome Back
-            </Typography>
-            <Typography variant="body1" color="#6b7280" sx={{ mb: 4 }}>
-              Masukkan detail akun Anda untuk melanjutkan.
-            </Typography>
+            borderRadius: '16px',
+            border: '1px solid #e4e4e7',
+            borderTop: '4px solid #09090b', // Bold brand accent line
+            boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.05)',
+            p: { xs: 4, sm: 5 },
+            position: 'relative'
+          }}
+        >
+          {/* Decorative Corner Element for Uniqueness */}
+          <Box sx={{ position: 'absolute', top: 0, right: 0, p: 2, opacity: 0.2 }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 0V24H0V0H24ZM2 22H22V2H2V22Z" fill="currentColor"/>
+              <rect x="6" y="6" width="12" height="12" fill="currentColor"/>
+            </svg>
+          </Box>
 
-            {error && <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>{error}</Alert>}
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h5" component="h1" sx={{ 
+              color: '#09090b', 
+              fontWeight: 800, 
+              letterSpacing: '-0.03em', 
+              mb: 1,
+              fontFamily: '"Plus Jakarta Sans", sans-serif'
+            }}>
+              Welcome back
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#71717a', fontFamily: '"Plus Jakarta Sans", sans-serif', fontSize: '0.95rem' }}>
+              Please enter your details to sign in.
+            </Typography>
+          </Box>
 
-            <Box component="form" onSubmit={handleLogin} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-              <TextField
-                label="Email"
-                type="email"
-                placeholder="user@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                sx={{ 
-                  '& .MuiOutlinedInput-root': { 
-                    borderRadius: '12px',
-                    bgcolor: '#f9fafb',
-                    '& fieldset': { borderColor: '#e5e7eb' },
-                    '&:hover fieldset': { borderColor: '#d1d5db' },
-                    '&.Mui-focused fieldset': { borderColor: '#4f46e5' },
-                  }
-                }}
-              />
+          {error && (
+            <Alert 
+              severity="error" 
+              sx={{ 
+                mb: 3, 
+                borderRadius: '8px',
+                bgcolor: '#fef2f2',
+                color: '#991b1b',
+                border: '1px solid #fecaca',
+                fontFamily: '"Plus Jakarta Sans", sans-serif'
+              }}
+            >
+              {error}
+            </Alert>
+          )}
+
+          <Box component="form" onSubmit={handleLogin} sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+            <TextField
+              label="Email Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              fullWidth
+              disabled={loading}
+              sx={inputStyles}
+            />
+
+            <Box>
               <TextField
                 label="Password"
-                type="password"
-                placeholder="Ketik password Anda"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 fullWidth
-                InputLabelProps={{ shrink: true }}
-                sx={{ 
-                  '& .MuiOutlinedInput-root': { 
-                    borderRadius: '12px',
-                    bgcolor: '#f9fafb',
-                    '& fieldset': { borderColor: '#e5e7eb' },
-                    '&:hover fieldset': { borderColor: '#d1d5db' },
-                    '&.Mui-focused fieldset': { borderColor: '#4f46e5' },
-                  }
-                }}
-              />
-
-              <Button 
-                type="submit" 
-                variant="contained" 
-                size="large"
                 disabled={loading}
-                disableElevation
-                sx={{ 
-                  mt: 1, 
-                  py: 1.8, 
-                  borderRadius: '12px',
-                  bgcolor: '#111827',
-                  color: '#ffffff',
-                  fontWeight: 600,
-                  fontSize: '1rem',
-                  textTransform: 'none',
-                  '&:hover': { bgcolor: '#374151' }
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                        sx={{ color: '#a1a1aa' }}
+                      >
+                        {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                 }}
-              >
-                {loading ? 'Memproses...' : 'Login'}
-              </Button>
-
-              <Typography variant="body2" sx={{ mt: 2, color: '#6b7280', textAlign: 'center' }}>
-                Belum punya akun? <Link to="/register" style={{ textDecoration: 'none', color: '#4f46e5', fontWeight: 600 }}>Daftar di sini</Link>
-              </Typography>
+                sx={inputStyles}
+              />
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                <Link to="#" style={{ textDecoration: 'none', color: '#71717a', fontSize: '0.85rem', fontWeight: 600, fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
+                  Forgot password?
+                </Link>
+              </Box>
             </Box>
-          </Box>
-        </Grid>
 
-      </Grid>
+            <Button 
+              type="submit" 
+              variant="contained" 
+              disabled={loading}
+              disableElevation
+              sx={{ 
+                mt: 1, 
+                py: 1.5, 
+                borderRadius: '8px',
+                bgcolor: '#09090b',
+                color: '#ffffff',
+                fontWeight: 600,
+                fontSize: '1rem',
+                textTransform: 'none',
+                fontFamily: '"Plus Jakarta Sans", sans-serif',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                '&:hover': { 
+                  bgcolor: '#27272a',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 6px 16px rgba(0,0,0,0.12)'
+                },
+                '&:active': {
+                  transform: 'translateY(0)',
+                },
+                '&.Mui-disabled': {
+                  bgcolor: '#e4e4e7',
+                  color: '#a1a1aa',
+                  boxShadow: 'none'
+                }
+              }}
+            >
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign In'}
+            </Button>
+          </Box>
+        </Box>
+
+        <Box sx={{ mt: 4, textAlign: 'center', p: 2, bgcolor: '#ffffff', borderRadius: '100px', border: '1px solid #e4e4e7', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+          <Typography variant="body2" sx={{ color: '#71717a', fontFamily: '"Plus Jakarta Sans", sans-serif', fontWeight: 500 }}>
+            Don't have an account?{' '}
+            <Link to="/register" style={{ 
+              textDecoration: 'none', 
+              color: '#09090b', 
+              fontWeight: 800,
+            }}>
+              Sign up now
+            </Link>
+          </Typography>
+        </Box>
+      </Box>
+
     </Box>
   );
 }

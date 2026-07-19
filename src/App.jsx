@@ -27,6 +27,7 @@ import Messages from './pages/Messages';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import StoreProfile from './pages/StoreProfile';
+import Following from './pages/Following';
 import './App.css';
 
 const theme = createTheme({
@@ -85,6 +86,7 @@ function AppContent() {
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/store/:username" element={<StoreProfile />} />
+            <Route path="/following" element={<Following />} />
           </Routes>
         </Box>
 

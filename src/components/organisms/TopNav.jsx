@@ -25,6 +25,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CategoryIcon from '@mui/icons-material/Category';
 import PersonIcon from '@mui/icons-material/Person';
+import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import Logo from '../atoms/Logo';
 import { useAuth } from '../../context/AuthContext';
@@ -203,6 +204,10 @@ export default function TopNav() {
                     <MenuItem component={Link} to="/orders" onClick={handleAkunClose} sx={{ py: 1.5, px: 2 }}>
                       <ListItemIcon><StorefrontIcon fontSize="small" sx={{ color: '#4B5563' }} /></ListItemIcon>
                       <Typography fontWeight={600} fontSize="0.9rem">Pesanan Saya</Typography>
+                    </MenuItem>
+                    <MenuItem component={Link} to="/following" onClick={handleAkunClose} sx={{ py: 1.5, px: 2 }}>
+                      <ListItemIcon><PeopleOutlinedIcon fontSize="small" sx={{ color: '#6366F1' }} /></ListItemIcon>
+                      <Typography fontWeight={600} fontSize="0.9rem">Kreator Diikuti</Typography>
                     </MenuItem>
                   </>
                 )}

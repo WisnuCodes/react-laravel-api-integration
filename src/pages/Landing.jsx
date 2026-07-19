@@ -2,13 +2,18 @@ import { Link } from 'react-router-dom';
 import {
   Container, Typography, Box, Button, Card, CardMedia,
   CardContent, Rating, CircularProgress, Chip, Grid,
-  Avatar, AvatarGroup, Switch, Alert, Paper
+  Avatar, AvatarGroup, Switch, Alert, Paper,
+  Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined';
 import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
 import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
+import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 import { NextJsIcon, ReactIcon, LaravelIcon, TailwindIcon, ViteIcon, TypeScriptIcon, VercelIcon } from '../components/atoms/TechIcons';
 import { useAuth } from '../context/AuthContext';
 import { useFetch } from '../hooks/useFetch';
@@ -132,12 +137,18 @@ export default function Landing() {
                  flex: 1, borderRight: { md: '1px solid #e5e7eb' }, borderBottom: { xs: '1px solid #e5e7eb', md: 'none' }, 
                  bgcolor: '#ffffff', p: { xs: 3, md: 4 }, overflow: 'auto', 
                  fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace', 
-                 fontSize: '0.85rem', color: '#374151', lineHeight: 1.8 
+                 fontSize: '0.85rem', color: '#374151', lineHeight: 1.8,
+                 msOverflowStyle: 'none',
+                 scrollbarWidth: 'none',
+                 '&::-webkit-scrollbar': {
+                   display: 'none'
+                 }
                }}>
                  <div style={{ color: '#9ca3af' }}>// 1. Install premium UI dashboard from Dibitech</div>
                  <div style={{ color: '#9ca3af', marginBottom: '16px' }}>// npm install @dibitech/enterprise-ui</div>
                  
-                 <div><span style={{ color: '#ec4899' }}>import</span> {'{'} <span style={{ color: '#3b82f6' }}>Dashboard, AnalyticsWidget</span> {'}'} <span style={{ color: '#ec4899' }}>from</span> <span style={{ color: '#10b981' }}>'@dibitech/enterprise-ui'</span>;</div>
+                 <div><span style={{ color: '#ec4899' }}>import</span> {'{'} <span style={{ color: '#3b82f6' }}>Dashboard, AnalyticsWidget</span> {'}'} <span style={{ color: '#ec4899' }}>from</span></div>
+                 <div><span style={{ color: '#10b981' }}>'@dibitech/enterprise-ui'</span>;</div>
                  <br/>
                  <div><span style={{ color: '#ec4899' }}>export default function</span> <span style={{ color: '#8b5cf6' }}>AdminPanel</span>() {'{'}</div>
                  <div style={{ paddingLeft: '20px' }}>
@@ -451,9 +462,22 @@ export default function Landing() {
           ) : (
             <Box
               sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
+                display: { xs: 'flex', sm: 'grid' },
+                gridTemplateColumns: { sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
+                flexDirection: { xs: 'row', sm: 'unset' },
+                overflowX: { xs: 'auto', sm: 'visible' },
                 gap: 3,
+                pb: { xs: 2, sm: 0 }, 
+                mx: { xs: -3, sm: 0 }, 
+                px: { xs: 3, sm: 0 }, 
+                scrollSnapType: { xs: 'x mandatory', sm: 'none' },
+                '&::-webkit-scrollbar': { display: 'none' },
+                msOverflowStyle: 'none',
+                scrollbarWidth: 'none',
+                '& > *': {
+                  flex: { xs: '0 0 85%', sm: 'unset' },
+                  scrollSnapAlign: { xs: 'start', sm: 'none' }
+                }
               }}
             >
               {products.map((p) => (
@@ -576,6 +600,148 @@ export default function Landing() {
               ))}
             </Grid>
           )}
+        </Container>
+      </Box>
+
+      {/* --- HOW IT WORKS (WORKFLOW) SECTION --- */}
+      <Box sx={{ py: { xs: 12, md: 16 }, px: 3, bgcolor: '#ffffff', position: 'relative' }}>
+        <Box sx={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '100vw', height: '100%', background: 'radial-gradient(ellipse at top, rgba(59,130,246,0.03) 0%, rgba(255,255,255,0) 70%)', pointerEvents: 'none' }} />
+        
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+          <Box sx={{ textAlign: 'center', mb: { xs: 8, md: 16 } }}>
+            <Chip label="Cara Kerja" size="small" sx={{ mb: 3, bgcolor: 'rgba(59,130,246,0.1)', color: '#3b82f6', fontWeight: 700, borderRadius: '8px' }} />
+            <Typography variant="h2" fontWeight={800} color="#111827" sx={{ mb: 2, letterSpacing: '-0.04em', fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
+              Dari ide hingga <Box component="span" sx={{ color: '#3b82f6' }}>production.</Box>
+            </Typography>
+            <Typography variant="body1" sx={{ color: '#6b7280', maxWidth: 600, mx: 'auto', fontSize: '1.125rem' }}>
+              Alur kerja terintegrasi yang didesain untuk mempercepat proses pengembangan aplikasi Anda secara drastis.
+            </Typography>
+          </Box>
+
+          <Box sx={{ position: 'relative' }}>
+            {/* Horizontal Line for Desktop */}
+            <Box sx={{ display: { xs: 'none', md: 'block' }, position: 'absolute', top: '40px', left: '10%', right: '10%', height: '2px', background: 'linear-gradient(90deg, rgba(59,130,246,0) 0%, rgba(59,130,246,0.2) 20%, rgba(59,130,246,0.2) 80%, rgba(59,130,246,0) 100%)', zIndex: 0 }} />
+
+            <Box 
+              sx={{ 
+                position: 'relative', 
+                zIndex: 1,
+                display: { xs: 'flex', md: 'grid' },
+                gridTemplateColumns: { md: 'repeat(3, 1fr)' },
+                gap: { xs: 4, md: 6 },
+                overflowX: { xs: 'auto', md: 'visible' },
+                pb: { xs: 4, md: 0 }, 
+                mx: { xs: -3, md: 0 }, 
+                px: { xs: 3, md: 0 }, 
+                scrollSnapType: { xs: 'x mandatory', md: 'none' },
+                '&::-webkit-scrollbar': { display: 'none' },
+                msOverflowStyle: 'none',
+                scrollbarWidth: 'none',
+                '& > *': {
+                  flex: { xs: '0 0 85%', md: 'unset' },
+                  scrollSnapAlign: { xs: 'center', md: 'none' }
+                }
+              }}
+            >
+              {[
+                { num: '01', title: 'Eksplorasi', desc: 'Temukan ratusan template UI, komponen, dan boilerplate backend yang sesuai dengan kebutuhan spesifik startup Anda.', icon: <SearchOutlinedIcon fontSize="large" sx={{ color: '#3b82f6' }} /> },
+                { num: '02', title: 'Checkout', desc: 'Selesaikan pembayaran dengan aman dan dapatkan akses instan ke source code tanpa proses review berbelit.', icon: <ShoppingBagOutlinedIcon fontSize="large" sx={{ color: '#3b82f6' }} /> },
+                { num: '03', title: 'Integrasi', desc: 'Integrasikan kode yang bersih ke sistem Anda. Lakukan deploy dan nikmati hasilnya dalam hitungan jam, bukan minggu.', icon: <CodeOutlinedIcon fontSize="large" sx={{ color: '#3b82f6' }} /> }
+              ].map((step, index) => (
+                <Box key={index}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', position: 'relative' }}>
+                    {/* Number Badge Background */}
+                    <Typography variant="h1" fontWeight={900} sx={{ position: 'absolute', top: -50, right: { xs: '10%', md: '10%' }, fontSize: { xs: '6rem', md: '8rem' }, color: '#f3f4f6', opacity: 0.8, zIndex: -1, pointerEvents: 'none' }}>
+                      {step.num}
+                    </Typography>
+
+                    {/* Icon Circle */}
+                    <Box sx={{ 
+                      width: 80, height: 80, borderRadius: '50%', bgcolor: '#ffffff', 
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                      mb: 4, 
+                      border: '1px solid #e5e7eb',
+                      boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.15)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': { transform: 'scale(1.05) translateY(-5px)', boxShadow: '0 20px 30px -10px rgba(59, 130, 246, 0.2)', borderColor: '#3b82f6' }
+                    }}>
+                      {step.icon}
+                    </Box>
+
+                    <Typography variant="h5" fontWeight={800} color="#111827" sx={{ mb: 2 }}>{step.title}</Typography>
+                    <Typography variant="body1" color="#6b7280" sx={{ lineHeight: 1.7, maxWidth: 300 }}>{step.desc}</Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </Box>
+        </Container>
+      </Box>
+
+      {/* --- FAQ SECTION (STANDARD MUI & CLEAN) --- */}
+      <Box sx={{ py: { xs: 12, md: 16 }, px: 3, bgcolor: '#fafafa', borderTop: '1px solid #e5e7eb' }}>
+        <Container maxWidth="md">
+          <Box sx={{ textAlign: 'center', mb: { xs: 6, md: 8 } }}>
+            <Chip label="Pertanyaan Populer" size="small" sx={{ mb: 3, bgcolor: '#e5e7eb', color: '#4b5563', fontWeight: 600, borderRadius: '6px' }} />
+            <Typography variant="h2" fontWeight={800} color="#111827" sx={{ mb: 2, letterSpacing: '-0.04em', fontSize: { xs: '2rem', md: '3rem' } }}>
+              Frequently Asked Questions
+            </Typography>
+            <Typography variant="body1" color="#6b7280" sx={{ maxWidth: 600, mx: 'auto', fontSize: '1.125rem' }}>
+              Semua yang perlu Anda ketahui tentang produk dan lisensi kami. Tidak menemukan jawaban? Hubungi tim support kami.
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {[
+              {
+                q: 'Apakah saya bisa menggunakan template ini untuk project klien?',
+                a: 'Tentu saja! Lisensi komersial kami mengizinkan Anda menggunakan template ini untuk jumlah project klien yang tidak terbatas. Anda bebas memodifikasi dan menyesuaikan source code sesuai kebutuhan spesifik mereka.'
+              },
+              {
+                q: 'Apakah ada biaya langganan bulanan?',
+                a: 'Tidak. Sistem kami adalah one-time payment (bayar sekali di awal). Anda akan mendapatkan akses seumur hidup ke produk yang Anda beli, termasuk semua update minor dan major di masa mendatang secara gratis.'
+              },
+              {
+                q: 'Framework dan bahasa pemrograman apa saja yang didukung?',
+                a: 'Mayoritas komponen UI kami dibangun menggunakan React, Next.js, dan TailwindCSS. Untuk produk backend, kami menyediakan boilerplate dengan Laravel dan Express.js (TypeScript). Pastikan membaca deskripsi setiap produk.'
+              },
+              {
+                q: 'Bagaimana jika saya menemukan bug pada source code?',
+                a: 'Kualitas kode adalah prioritas utama kami. Jika Anda menemukan bug, Anda dapat langsung melaporkannya melalui platform kami, dan tim engineer kami akan merilis patch dalam waktu 1-2 hari kerja.'
+              },
+              {
+                q: 'Apakah saya mendapatkan bantuan teknis (support)?',
+                a: 'Ya, setiap pembelian produk premium mencakup dukungan teknis prioritas selama 6 bulan. Tim kami siap membantu Anda menyelesaikan masalah integrasi atau konfigurasi awal.'
+              }
+            ].map((faq, index) => (
+              <Accordion 
+                key={index}
+                disableGutters
+                elevation={0}
+                sx={{
+                  bgcolor: '#ffffff',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '12px !important',
+                  '&:before': { display: 'none' },
+                  '&.Mui-expanded': { margin: 0, mt: index > 0 ? 2 : 0, mb: 2, borderColor: '#d1d5db' }
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon sx={{ color: '#9ca3af' }} />}
+                  sx={{ p: { xs: 2, md: 3 }, '& .MuiAccordionSummary-content': { my: 0 } }}
+                >
+                  <Typography variant="subtitle1" fontWeight={600} color="#111827" sx={{ fontSize: '1rem' }}>
+                    {faq.q}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails sx={{ px: { xs: 2, md: 3 }, pb: { xs: 2, md: 3 }, pt: 0 }}>
+                  <Typography variant="body2" color="#6b7280" sx={{ lineHeight: 1.7 }}>
+                    {faq.a}
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </Box>
         </Container>
       </Box>
 

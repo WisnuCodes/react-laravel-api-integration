@@ -23,6 +23,8 @@ import { WishlistProvider } from './context/WishlistContext';
 import Wishlist from './pages/Wishlist';
 import Profile from './pages/Profile';
 import Messages from './pages/Messages';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 import './App.css';
 
 const theme = createTheme({
@@ -78,6 +80,8 @@ function AppContent() {
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/messages" element={<Messages />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
           </Routes>
         </Box>
 

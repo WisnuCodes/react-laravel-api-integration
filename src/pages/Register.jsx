@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { apiRequest } from '../api/client';
-import { Box, Button, TextField, Typography, Alert, InputAdornment, IconButton, CircularProgress, MenuItem, Divider } from '@mui/material';
+import { Box, Button, TextField, Typography, Alert, InputAdornment, IconButton, CircularProgress, MenuItem, Divider, Checkbox, FormControlLabel } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Logo from '../components/atoms/Logo';
 
@@ -15,6 +15,7 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('buyer');
   const [showPassword, setShowPassword] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -261,10 +262,32 @@ export default function Register() {
               <MenuItem value="seller" sx={{ py: 1.5, fontFamily: '"Plus Jakarta Sans", sans-serif', fontSize: '0.95rem', fontWeight: 500 }}>Seller (Penjual)</MenuItem>
             </TextField>
 
+            <FormControlLabel
+              control={
+                <Checkbox 
+                  checked={agreed} 
+                  onChange={(e) => setAgreed(e.target.checked)} 
+                  sx={{ 
+                    color: '#a1a1aa', 
+                    '&.Mui-checked': { color: '#09090b' } 
+                  }} 
+                />
+              }
+              label={
+                <Typography variant="body2" sx={{ color: '#71717a', fontFamily: '"Plus Jakarta Sans", sans-serif', fontSize: '0.85rem' }}>
+                  Saya setuju dengan{' '}
+                  <Link to="/terms-of-service" style={{ color: '#09090b', fontWeight: 700, textDecoration: 'none' }}>Syarat & Ketentuan</Link>{' '}
+                  serta{' '}
+                  <Link to="/privacy-policy" style={{ color: '#09090b', fontWeight: 700, textDecoration: 'none' }}>Kebijakan Privasi</Link>
+                </Typography>
+              }
+              sx={{ mt: 1, mb: 1, alignItems: 'flex-start', '& .MuiCheckbox-root': { pt: 0.5 } }}
+            />
+
             <Button 
               type="submit" 
               variant="contained" 
-              disabled={loading}
+              disabled={loading || !agreed}
               disableElevation
               sx={{ 
                 mt: 1, 

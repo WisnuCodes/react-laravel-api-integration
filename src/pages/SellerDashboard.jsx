@@ -5,7 +5,7 @@ import {
   Paper, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, IconButton, Tooltip, Dialog, DialogTitle,
   DialogContent, DialogActions, Button, TextField, MenuItem,
-  Grid, Card, CardContent, Divider
+  Grid, Card, CardContent, Divider, Checkbox, FormControlLabel
 } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import EditIcon from '@mui/icons-material/Edit';
@@ -38,12 +38,37 @@ export default function SellerDashboard() {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState('');
+  const [termsAgreed, setTermsAgreed] = useState(false);
+
+  const inputStyles = {
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '8px',
+      backgroundColor: '#FAFAFA',
+      transition: 'all 0.2s',
+      '& fieldset': { borderColor: '#E5E7EB', borderWidth: '1px' },
+      '&:hover fieldset': { borderColor: '#D1D5DB' },
+      '&.Mui-focused fieldset': { borderColor: '#111827', borderWidth: '1px' },
+      '&.Mui-focused': { backgroundColor: '#ffffff', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.03)' },
+      '& input, & textarea, & .MuiSelect-select': {
+        fontSize: '0.95rem',
+        fontWeight: 500,
+        color: '#111827',
+      }
+    },
+    '& .MuiInputLabel-root': {
+      color: '#6B7280',
+      fontSize: '0.9rem',
+      fontWeight: 500,
+      '&.Mui-focused': { color: '#111827', fontWeight: 600 }
+    }
+  };
 
   const resetForm = () => {
     setForm({ title: '', description: '', price: '', rating: '0', category_id: '', file_path: '', thumbnail: '', status: 'active' });
     setEditingProduct(null);
     setSubmitError('');
     setSubmitSuccess('');
+    setTermsAgreed(false);
   };
 
   const openAddDialog = () => {
@@ -470,95 +495,151 @@ export default function SellerDashboard() {
           fontWeight: 800, 
           pb: 2, pt: 3, px: 4,
           fontSize: '1.25rem',
-          color: '#09090b',
-          borderBottom: '1px solid #f4f4f5'
+          color: '#111827',
+          borderBottom: '1px solid #F3F4F6'
         }}>
           {editingProduct ? 'Edit Produk' : 'Tambah Produk Baru'}
+          <Typography variant="body2" sx={{ color: '#6B7280', fontWeight: 500, mt: 0.5 }}>
+            {editingProduct ? 'Perbarui informasi produk Anda di bawah ini.' : 'Lengkapi detail produk digital yang ingin Anda jual.'}
+          </Typography>
         </DialogTitle>
         <DialogContent sx={{ p: 4 }}>
           {submitError && <Alert severity="error" sx={{ mb: 3, borderRadius: '8px' }}>{submitError}</Alert>}
           {submitSuccess && <Alert severity="success" sx={{ mb: 3, borderRadius: '8px' }}>{submitSuccess}</Alert>}
 
-          <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, mt: 1 }}>
-            <TextField
-              fullWidth
-              label="Judul Produk"
-              placeholder="Contoh: Template React E-Commerce Modern"
-              variant="outlined"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-              InputProps={{ sx: { borderRadius: '8px' } }}
-              InputLabelProps={{ shrink: true }}
-            />
-            <TextField
-              fullWidth
-              label="Deskripsi Lengkap"
-              placeholder="Contoh: Template ini dibuat menggunakan React dan MUI..."
-              multiline
-              rows={4}
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-              InputProps={{ sx: { borderRadius: '8px' } }}
-              InputLabelProps={{ shrink: true }}
-            />
+          {/* Syarat & Ketentuan Upload Produk */}
+          <Box sx={{ mb: 4, p: 3, bgcolor: '#FFFBEB', border: '1px solid #FEF3C7', borderRadius: '12px' }}>
+            <Typography variant="subtitle2" sx={{ color: '#92400E', fontWeight: 700, mb: 1 }}>
+              Perhatian Sebelum Mengunggah Produk
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#92400E', mb: 1.5, lineHeight: 1.6 }}>
+              Sebagai penjual di platform Dibitech, Anda wajib memastikan bahwa:
+            </Typography>
+            <Box component="ul" sx={{ color: '#92400E', m: 0, pl: 2.5, fontSize: '0.85rem', lineHeight: 1.6 }}>
+              <li style={{ marginBottom: '4px' }}>Produk digital ini adalah 100% buatan Anda sendiri atau Anda memiliki lisensi distribusi komersial yang sah.</li>
+              <li style={{ marginBottom: '4px' }}>File tidak mengandung malware, backdoor, atau kode berbahaya lainnya yang dapat merugikan pembeli.</li>
+              <li style={{ marginBottom: '4px' }}><strong>Dilarang mengunggah produk yang penuh dengan bug fatal.</strong> Jika ditemukan bug oleh pembeli, Anda wajib memberikan solusi perbaikan atau merilis pembaruan (update) secara gratis.</li>
+              <li>Pelanggaran terhadap hak cipta atau keamanan akan mengakibatkan akun diblokir secara permanen tanpa peringatan.</li>
+            </Box>
+          </Box>
+
+          <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
             
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2.5 }}>
-              <TextField
-                label="Harga (Rp)"
-                placeholder="Contoh: 150000"
-                type="number"
-                value={form.price}
-                onChange={(e) => setForm({ ...form, price: e.target.value })}
-                InputProps={{ sx: { borderRadius: '8px' } }}
-                InputLabelProps={{ shrink: true }}
-              />
-              <TextField
-                select
-                label="Kategori"
-                value={form.category_id}
-                onChange={(e) => setForm({ ...form, category_id: e.target.value })}
-                InputProps={{ sx: { borderRadius: '8px' } }}
-              >
-                {categories.map((cat) => (
-                  <MenuItem key={cat.id || cat.category_id} value={cat.id || cat.category_id}>
-                    {cat.name}
-                  </MenuItem>
-                ))}
-              </TextField>
+            <Box>
+              <Typography variant="subtitle2" sx={{ color: '#111827', fontWeight: 700, mb: 2 }}>
+                1. Informasi Dasar
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+                <TextField
+                  fullWidth
+                  label="Judul Produk"
+                  placeholder="Contoh: Template React E-Commerce Modern"
+                  value={form.title}
+                  onChange={(e) => setForm({ ...form, title: e.target.value })}
+                  sx={inputStyles}
+                />
+                <TextField
+                  fullWidth
+                  label="Deskripsi Lengkap"
+                  placeholder="Deskripsikan fitur, kegunaan, dan panduan singkat mengenai produk ini..."
+                  multiline
+                  rows={4}
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  sx={inputStyles}
+                />
+              </Box>
             </Box>
 
-            <TextField
-              fullWidth
-              label="Tautan Berkas Produk (Google Drive / GitHub)"
-              placeholder="Contoh: https://drive.google.com/file/d/..."
-              value={form.file_path}
-              onChange={(e) => setForm({ ...form, file_path: e.target.value })}
-              InputProps={{ sx: { borderRadius: '8px' } }}
-              InputLabelProps={{ shrink: true }}
-              helperText="Tautan ini akan diberikan kepada pembeli setelah membayar."
+            <Divider sx={{ borderColor: '#F3F4F6' }} />
+
+            <Box>
+              <Typography variant="subtitle2" sx={{ color: '#111827', fontWeight: 700, mb: 2 }}>
+                2. Harga & Kategori
+              </Typography>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2.5 }}>
+                <TextField
+                  label="Harga (Rp)"
+                  placeholder="Contoh: 150000"
+                  type="number"
+                  value={form.price}
+                  onChange={(e) => setForm({ ...form, price: e.target.value })}
+                  sx={inputStyles}
+                  InputProps={{
+                    inputProps: { min: 0 }
+                  }}
+                />
+                <TextField
+                  select
+                  label="Kategori"
+                  value={form.category_id}
+                  onChange={(e) => setForm({ ...form, category_id: e.target.value })}
+                  sx={inputStyles}
+                >
+                  {categories.map((cat) => (
+                    <MenuItem key={cat.id || cat.category_id} value={cat.id || cat.category_id}>
+                      {cat.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Box>
+            </Box>
+
+            <Divider sx={{ borderColor: '#F3F4F6' }} />
+
+            <Box>
+              <Typography variant="subtitle2" sx={{ color: '#111827', fontWeight: 700, mb: 2 }}>
+                3. Berkas & Media
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+                <TextField
+                  fullWidth
+                  label="Tautan Berkas Produk (Google Drive / GitHub / ZIP)"
+                  placeholder="Contoh: https://drive.google.com/file/d/..."
+                  value={form.file_path}
+                  onChange={(e) => setForm({ ...form, file_path: e.target.value })}
+                  sx={inputStyles}
+                  helperText="Tautan ini bersifat rahasia dan HANYA diberikan kepada pembeli setelah mereka membayar."
+                />
+
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2.5 }}>
+                  <TextField
+                    label="URL Gambar/Thumbnail"
+                    placeholder="Contoh: https://imgur.com/gambar.png"
+                    value={form.thumbnail}
+                    onChange={(e) => setForm({ ...form, thumbnail: e.target.value })}
+                    sx={inputStyles}
+                    helperText="Tautan gambar sampul. Biarkan kosong jika tidak ada."
+                  />
+                  <TextField
+                    select
+                    label="Status Produk"
+                    value={form.status}
+                    onChange={(e) => setForm({ ...form, status: e.target.value })}
+                    sx={inputStyles}
+                  >
+                    <MenuItem value="active">Aktif & Ditampilkan</MenuItem>
+                    <MenuItem value="inactive">Sembunyikan</MenuItem>
+                  </TextField>
+                </Box>
+              </Box>
+            </Box>
+
+            <FormControlLabel
+              control={
+                <Checkbox 
+                  checked={termsAgreed} 
+                  onChange={(e) => setTermsAgreed(e.target.checked)} 
+                  sx={{ color: '#a1a1aa', '&.Mui-checked': { color: '#09090b' } }} 
+                />
+              }
+              label={
+                <Typography variant="body2" sx={{ color: '#71717a', fontSize: '0.85rem' }}>
+                  Saya menyatakan bahwa produk ini mematuhi semua syarat & ketentuan, bebas dari pelanggaran hak cipta, aman dari malware, dan dipastikan berjalan tanpa bug fatal.
+                </Typography>
+              }
+              sx={{ mt: 2, alignItems: 'flex-start', '& .MuiCheckbox-root': { pt: 0.2 } }}
             />
-
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2.5 }}>
-              <TextField
-                label="URL Gambar/Thumbnail"
-                placeholder="Contoh: https://imgur.com/gambar.png"
-                value={form.thumbnail}
-                onChange={(e) => setForm({ ...form, thumbnail: e.target.value })}
-                InputProps={{ sx: { borderRadius: '8px' } }}
-                InputLabelProps={{ shrink: true }}
-                helperText="Tautan gambar sampul produk."
-              />
-              <TextField
-                select
-                label="Status Produk"
-                value={form.status}
-                onChange={(e) => setForm({ ...form, status: e.target.value })}
-                InputProps={{ sx: { borderRadius: '8px' } }}
-              >
-                <MenuItem value="active">Aktif & Ditampilkan</MenuItem>
-                <MenuItem value="inactive">Sembunyikan</MenuItem>
-              </TextField>
-            </Box>
           </Box>
         </DialogContent>
         <DialogActions sx={{ px: 4, pb: 4, pt: 1, gap: 1 }}>
@@ -578,7 +659,7 @@ export default function SellerDashboard() {
           <Button
             variant="contained"
             onClick={handleSubmit}
-            disabled={submitLoading || !form.title || !form.description || !form.price || !form.category_id || !form.file_path}
+            disabled={submitLoading || !form.title || !form.description || !form.price || !form.category_id || !form.file_path || !termsAgreed}
             sx={{
               bgcolor: '#09090b',
               color: '#ffffff',

@@ -15,6 +15,7 @@ import Users from './pages/Users';
 import UserDetail from './pages/UserDetail';
 import Orders from './pages/Orders';
 import Library from './pages/Library';
+import UserDashboard from './pages/UserDashboard';
 import SellerDashboard from './pages/SellerDashboard';
 import Cart from './pages/Cart';
 import Landing from './pages/Landing';
@@ -25,6 +26,7 @@ import Profile from './pages/Profile';
 import Messages from './pages/Messages';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import StoreProfile from './pages/StoreProfile';
 import './App.css';
 
 const theme = createTheme({
@@ -82,6 +84,7 @@ function AppContent() {
             <Route path="/messages" element={<Messages />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/store/:username" element={<StoreProfile />} />
           </Routes>
         </Box>
 

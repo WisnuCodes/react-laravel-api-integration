@@ -175,7 +175,15 @@ export default function ProductDetail() {
 
           {product.seller?.name && (
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-              Dibuat oleh <Box component="span" fontWeight="700" color="#111827">{product.seller.name}</Box>
+              Dibuat oleh{' '}
+              <Box 
+                component={Link} 
+                to={product.seller.username ? `/store/${product.seller.username}` : '#'}
+                fontWeight="700" 
+                sx={{ color: '#111827', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+              >
+                {product.seller.name}
+              </Box>
             </Typography>
           )}
 

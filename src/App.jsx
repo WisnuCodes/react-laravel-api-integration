@@ -21,6 +21,8 @@ import Landing from './pages/Landing';
 import AdminDashboard from './pages/AdminDashboard';
 import { WishlistProvider } from './context/WishlistContext';
 import Wishlist from './pages/Wishlist';
+import Profile from './pages/Profile';
+import Messages from './pages/Messages';
 import './App.css';
 
 const theme = createTheme({
@@ -74,6 +76,8 @@ function AppContent() {
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/messages" element={<Messages />} />
           </Routes>
         </Box>
 

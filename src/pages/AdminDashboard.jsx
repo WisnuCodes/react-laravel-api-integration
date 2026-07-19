@@ -6,7 +6,6 @@ import {
   DialogContentText, DialogActions, Button, Snackbar, Alert, Stack,
   Divider, TextField
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
 import PeopleIcon from '@mui/icons-material/People';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';

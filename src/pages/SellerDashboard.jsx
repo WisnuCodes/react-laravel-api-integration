@@ -5,7 +5,7 @@ import {
   Paper, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, IconButton, Tooltip, Dialog, DialogTitle,
   DialogContent, DialogActions, Button, TextField, MenuItem,
-  Grid, Card, CardContent
+  Grid, Card, CardContent, Divider
 } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import EditIcon from '@mui/icons-material/Edit';
@@ -147,12 +147,12 @@ export default function SellerDashboard() {
     <Box sx={{ bgcolor: '#FAFAFA', minHeight: '100vh', pb: 10 }}>
       {/* Vercel-like Header Section */}
       <Box sx={{ bgcolor: '#ffffff', borderBottom: '1px solid #EAEAEA', pt: { xs: 4, md: 5 }, pb: { xs: 3, md: 4 }, px: { xs: 2, md: 3 }, mb: { xs: 3, md: 4 } }}>
-        <Container maxWidth="lg" disableGutters sx={{ px: { xs: 1, sm: 2 }, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, gap: 2 }}>
+        <Container maxWidth="lg" disableGutters sx={{ px: { xs: 1, sm: 2 }, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, gap: 3 }}>
           <Box>
-            <Typography variant="h4" fontWeight={700} sx={{ color: '#000000', mb: 0.5, letterSpacing: '-0.04em', fontSize: { xs: '1.75rem', md: '2.125rem' } }}>
+            <Typography variant="h4" fontWeight={800} sx={{ color: '#09090b', mb: 0.5, letterSpacing: '-0.03em', fontSize: { xs: '1.75rem', md: '2.125rem' } }}>
               Dashboard Seller
             </Typography>
-            <Typography variant="body2" sx={{ color: '#666666' }}>
+            <Typography variant="body2" sx={{ color: '#71717a' }}>
               Kelola semua produk yang Anda jual di platform ini.
             </Typography>
           </Box>
@@ -162,12 +162,13 @@ export default function SellerDashboard() {
             startIcon={<AddIcon />}
             onClick={openAddDialog}
             sx={{
-              bgcolor: '#000000',
+              bgcolor: '#09090b',
+              width: { xs: '100%', sm: 'auto' },
               textTransform: 'none',
               fontWeight: 600,
               borderRadius: '8px',
-              px: 3, py: 1,
-              '&:hover': { bgcolor: '#333333' },
+              px: 3, py: { xs: 1.2, sm: 1 },
+              '&:hover': { bgcolor: '#27272a' },
             }}
             disableElevation
           >
@@ -190,7 +191,7 @@ export default function SellerDashboard() {
           </Grid>
         </Grid>
 
-      {/* Products Table */}
+      {/* Products Section */}
       {myProducts.length === 0 ? (
         <Paper
           elevation={0}
@@ -199,11 +200,12 @@ export default function SellerDashboard() {
             border: '1px solid #EAEAEA',
             bgcolor: '#ffffff',
             py: 8,
+            px: 2,
             textAlign: 'center',
           }}
         >
-          <DashboardIcon sx={{ fontSize: 48, color: '#EAEAEA', mb: 2 }} />
-          <Typography sx={{ color: '#666666', mb: 3 }}>Anda belum memiliki produk.</Typography>
+          <DashboardIcon sx={{ fontSize: 48, color: '#d4d4d8', mb: 2 }} />
+          <Typography sx={{ color: '#71717a', mb: 3 }}>Anda belum memiliki produk.</Typography>
           <Button
             variant="outlined"
             onClick={openAddDialog}
@@ -211,131 +213,244 @@ export default function SellerDashboard() {
               textTransform: 'none',
               fontWeight: 600,
               borderRadius: '8px',
-              borderColor: '#EAEAEA',
-              color: '#000000',
-              '&:hover': { bgcolor: '#FAFAFA', borderColor: '#cccccc' }
+              borderColor: '#e4e4e7',
+              color: '#09090b',
+              '&:hover': { bgcolor: '#f4f4f5', borderColor: '#d4d4d8' }
             }}
           >
             Tambah Produk Pertama
           </Button>
         </Paper>
       ) : (
-        <TableContainer
-          component={Paper}
-          elevation={0}
-          sx={{
-            borderRadius: '12px',
-            border: '1px solid #EAEAEA',
-            bgcolor: '#ffffff'
-          }}
-        >
-          <Table sx={{ minWidth: 750 }}>
-            <TableHead>
-              <TableRow sx={{ bgcolor: '#FAFAFA' }}>
-                <TableCell sx={{ fontWeight: 500, color: '#666666', borderBottom: '1px solid #EAEAEA' }}>
-                  Produk
-                </TableCell>
-                <TableCell sx={{ fontWeight: 500, color: '#666666', borderBottom: '1px solid #EAEAEA' }}>
-                  Kategori
-                </TableCell>
-                <TableCell sx={{ fontWeight: 500, color: '#666666', borderBottom: '1px solid #EAEAEA' }} align="right">
-                  Harga
-                </TableCell>
-                <TableCell sx={{ fontWeight: 500, color: '#666666', borderBottom: '1px solid #EAEAEA' }} align="center">
-                  Rating
-                </TableCell>
-                <TableCell sx={{ fontWeight: 500, color: '#666666', borderBottom: '1px solid #EAEAEA' }} align="center">
-                  Status
-                </TableCell>
-                <TableCell sx={{ fontWeight: 500, color: '#666666', borderBottom: '1px solid #EAEAEA' }} align="center">
-                  Aksi
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {myProducts.map((product) => (
-                <TableRow
-                  key={product.id}
-                  sx={{
-                    transition: 'background-color 0.2s',
-                    '&:hover': { bgcolor: '#FAFAFA' },
-                    '&:last-child td': { borderBottom: 0 },
-                  }}
-                >
-                  <TableCell sx={{ borderBottom: '1px solid #EAEAEA' }}>
-                    <Typography variant="body2" fontWeight={600} color="#111827">
-                      {product.title}
-                    </Typography>
-                  </TableCell>
-                  <TableCell sx={{ borderBottom: '1px solid #EAEAEA' }}>
-                    <Typography variant="body2" color="#666666">
-                      {product.category?.name || '-'}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right" sx={{ borderBottom: '1px solid #EAEAEA' }}>
-                    <Typography variant="body2" fontWeight={600} color="#111827">
-                      Rp {Number(product.price).toLocaleString('id-ID')}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: '1px solid #EAEAEA' }}>
-                    <Typography variant="body2" color="#666666">
-                      ⭐ {Number(product.rating).toFixed(1)}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: '1px solid #EAEAEA' }}>
+        <>
+          {/* Mobile View: Cards (Hidden on Desktop) */}
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', gap: 2 }}>
+            {myProducts.map((product) => (
+              <Card 
+                key={product.id} 
+                elevation={0} 
+                sx={{ 
+                  borderRadius: '12px', 
+                  border: '1px solid #EAEAEA', 
+                  bgcolor: '#ffffff' 
+                }}
+              >
+                <CardContent sx={{ p: 2, pb: '16px !important' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
+                    <Box sx={{ pr: 2 }}>
+                      <Typography variant="subtitle1" fontWeight={700} sx={{ color: '#09090b', lineHeight: 1.2, mb: 0.5 }}>
+                        {product.title}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#71717a' }}>
+                        {product.category?.name || '-'}
+                      </Typography>
+                    </Box>
                     <Box 
                       sx={{ 
                         display: 'inline-block',
                         px: 1.2, py: 0.3, 
-                        borderRadius: '99px',
+                        borderRadius: '100px',
                         border: '1px solid',
-                        borderColor: product.status === 'active' ? '#A7F3D0' : '#EAEAEA',
+                        borderColor: product.status === 'active' ? '#A7F3D0' : '#E4E4E7',
                         bgcolor: product.status === 'active' ? '#ECFDF5' : '#FAFAFA',
-                        color: product.status === 'active' ? '#065F46' : '#666666',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
+                        color: product.status === 'active' ? '#065F46' : '#71717A',
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        whiteSpace: 'nowrap'
                       }}
                     >
                       {product.status === 'active' ? 'Aktif' : 'Nonaktif'}
                     </Box>
-                  </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: '1px solid #EAEAEA' }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 0.5 }}>
-                      <Tooltip title="Lihat" arrow>
-                        <IconButton
-                          component={Link}
-                          to={`/products/${product.id}`}
-                          size="small"
-                          sx={{ color: '#666666', '&:hover': { bgcolor: '#F5F5F5', color: '#111827' } }}
+                  </Box>
+
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                    <Typography variant="h6" fontWeight={700} sx={{ color: '#09090b', fontSize: '1.1rem' }}>
+                      Rp {Number(product.price).toLocaleString('id-ID')}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#71717a', fontWeight: 600 }}>
+                      ⭐ {Number(product.rating).toFixed(1)}
+                    </Typography>
+                  </Box>
+
+                  <Divider sx={{ mb: 1.5, borderColor: '#f4f4f5' }} />
+
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
+                    <Button 
+                      startIcon={<VisibilityIcon />} 
+                      component={Link} 
+                      to={`/products/${product.id}`}
+                      fullWidth
+                      sx={{ 
+                        color: '#71717a', 
+                        bgcolor: '#fafafa',
+                        border: '1px solid #e4e4e7',
+                        textTransform: 'none', 
+                        fontWeight: 600,
+                        borderRadius: '8px',
+                        py: 0.8,
+                        '&:hover': { bgcolor: '#f4f4f5' }
+                      }}
+                    >
+                      Lihat
+                    </Button>
+                    <Button 
+                      startIcon={<EditIcon />} 
+                      onClick={() => openEditDialog(product)}
+                      fullWidth
+                      sx={{ 
+                        color: '#3B82F6', 
+                        bgcolor: '#EFF6FF',
+                        textTransform: 'none', 
+                        fontWeight: 600,
+                        borderRadius: '8px',
+                        py: 0.8,
+                        '&:hover': { bgcolor: '#DBEAFE' }
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button 
+                      startIcon={<DeleteIcon />} 
+                      onClick={() => handleDelete(product.id)}
+                      fullWidth
+                      sx={{ 
+                        color: '#EF4444', 
+                        bgcolor: '#FEF2F2',
+                        textTransform: 'none', 
+                        fontWeight: 600,
+                        borderRadius: '8px',
+                        py: 0.8,
+                        '&:hover': { bgcolor: '#FEE2E2' }
+                      }}
+                    >
+                      Hapus
+                    </Button>
+                  </Box>
+                </CardContent>
+              </Card>
+            ))}
+          </Box>
+
+          {/* Desktop View: Table (Hidden on Mobile) */}
+          <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+            <TableContainer
+              component={Paper}
+              elevation={0}
+              sx={{
+                borderRadius: '12px',
+                border: '1px solid #EAEAEA',
+                bgcolor: '#ffffff'
+              }}
+            >
+              <Table sx={{ minWidth: 750 }}>
+                <TableHead>
+                  <TableRow sx={{ bgcolor: '#FAFAFA' }}>
+                    <TableCell sx={{ fontWeight: 600, color: '#71717a', borderBottom: '1px solid #EAEAEA', py: 2 }}>
+                      Produk
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#71717a', borderBottom: '1px solid #EAEAEA', py: 2 }}>
+                      Kategori
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#71717a', borderBottom: '1px solid #EAEAEA', py: 2 }} align="right">
+                      Harga
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#71717a', borderBottom: '1px solid #EAEAEA', py: 2 }} align="center">
+                      Rating
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#71717a', borderBottom: '1px solid #EAEAEA', py: 2 }} align="center">
+                      Status
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#71717a', borderBottom: '1px solid #EAEAEA', py: 2 }} align="center">
+                      Aksi
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {myProducts.map((product) => (
+                    <TableRow
+                      key={product.id}
+                      sx={{
+                        transition: 'background-color 0.2s',
+                        '&:hover': { bgcolor: '#FAFAFA' },
+                        '&:last-child td': { borderBottom: 0 },
+                      }}
+                    >
+                      <TableCell sx={{ borderBottom: '1px solid #EAEAEA' }}>
+                        <Typography variant="body2" fontWeight={700} color="#09090b">
+                          {product.title}
+                        </Typography>
+                      </TableCell>
+                      <TableCell sx={{ borderBottom: '1px solid #EAEAEA' }}>
+                        <Typography variant="body2" color="#71717a">
+                          {product.category?.name || '-'}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="right" sx={{ borderBottom: '1px solid #EAEAEA' }}>
+                        <Typography variant="body2" fontWeight={700} color="#09090b">
+                          Rp {Number(product.price).toLocaleString('id-ID')}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center" sx={{ borderBottom: '1px solid #EAEAEA' }}>
+                        <Typography variant="body2" color="#71717a" fontWeight={600}>
+                          ⭐ {Number(product.rating).toFixed(1)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center" sx={{ borderBottom: '1px solid #EAEAEA' }}>
+                        <Box 
+                          sx={{ 
+                            display: 'inline-block',
+                            px: 1.2, py: 0.3, 
+                            borderRadius: '100px',
+                            border: '1px solid',
+                            borderColor: product.status === 'active' ? '#A7F3D0' : '#e4e4e7',
+                            bgcolor: product.status === 'active' ? '#ECFDF5' : '#FAFAFA',
+                            color: product.status === 'active' ? '#065F46' : '#71717a',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                          }}
                         >
-                          <VisibilityIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Edit" arrow>
-                        <IconButton
-                          size="small"
-                          onClick={() => openEditDialog(product)}
-                          sx={{ color: '#3B82F6', '&:hover': { bgcolor: '#EFF6FF' } }}
-                        >
-                          <EditIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Hapus" arrow>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDelete(product.id)}
-                          sx={{ color: '#EF4444', '&:hover': { bgcolor: '#FEF2F2' } }}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                          {product.status === 'active' ? 'Aktif' : 'Nonaktif'}
+                        </Box>
+                      </TableCell>
+                      <TableCell align="center" sx={{ borderBottom: '1px solid #EAEAEA' }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 0.5 }}>
+                          <Tooltip title="Lihat" arrow>
+                            <IconButton
+                              component={Link}
+                              to={`/products/${product.id}`}
+                              size="small"
+                              sx={{ color: '#71717a', '&:hover': { bgcolor: '#e4e4e7', color: '#09090b' } }}
+                            >
+                              <VisibilityIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Edit" arrow>
+                            <IconButton
+                              size="small"
+                              onClick={() => openEditDialog(product)}
+                              sx={{ color: '#3B82F6', '&:hover': { bgcolor: '#EFF6FF' } }}
+                            >
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Hapus" arrow>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleDelete(product.id)}
+                              sx={{ color: '#EF4444', '&:hover': { bgcolor: '#FEF2F2' } }}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        </>
       )}
 
       {/* Add/Edit Product Dialog */}
@@ -346,7 +461,7 @@ export default function SellerDashboard() {
         fullWidth
         PaperProps={{ 
           sx: { 
-            borderRadius: '20px',
+            borderRadius: '16px',
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
           } 
         }}
@@ -354,15 +469,15 @@ export default function SellerDashboard() {
         <DialogTitle sx={{ 
           fontWeight: 800, 
           pb: 2, pt: 3, px: 4,
-          fontSize: '1.5rem',
-          color: '#111827',
-          borderBottom: '1px solid #f3f4f6'
+          fontSize: '1.25rem',
+          color: '#09090b',
+          borderBottom: '1px solid #f4f4f5'
         }}>
           {editingProduct ? 'Edit Produk' : 'Tambah Produk Baru'}
         </DialogTitle>
         <DialogContent sx={{ p: 4 }}>
-          {submitError && <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>{submitError}</Alert>}
-          {submitSuccess && <Alert severity="success" sx={{ mb: 3, borderRadius: 2 }}>{submitSuccess}</Alert>}
+          {submitError && <Alert severity="error" sx={{ mb: 3, borderRadius: '8px' }}>{submitError}</Alert>}
+          {submitSuccess && <Alert severity="success" sx={{ mb: 3, borderRadius: '8px' }}>{submitSuccess}</Alert>}
 
           <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, mt: 1 }}>
             <TextField
@@ -372,29 +487,29 @@ export default function SellerDashboard() {
               variant="outlined"
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
-              InputProps={{ sx: { borderRadius: '12px' } }}
+              InputProps={{ sx: { borderRadius: '8px' } }}
               InputLabelProps={{ shrink: true }}
             />
             <TextField
               fullWidth
               label="Deskripsi Lengkap"
-              placeholder="Contoh: Template ini dibuat menggunakan React dan MUI. Sangat cocok untuk toko online..."
+              placeholder="Contoh: Template ini dibuat menggunakan React dan MUI..."
               multiline
               rows={4}
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              InputProps={{ sx: { borderRadius: '12px' } }}
+              InputProps={{ sx: { borderRadius: '8px' } }}
               InputLabelProps={{ shrink: true }}
             />
             
-            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2.5 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2.5 }}>
               <TextField
                 label="Harga (Rp)"
                 placeholder="Contoh: 150000"
                 type="number"
                 value={form.price}
                 onChange={(e) => setForm({ ...form, price: e.target.value })}
-                InputProps={{ sx: { borderRadius: '12px' } }}
+                InputProps={{ sx: { borderRadius: '8px' } }}
                 InputLabelProps={{ shrink: true }}
               />
               <TextField
@@ -402,7 +517,7 @@ export default function SellerDashboard() {
                 label="Kategori"
                 value={form.category_id}
                 onChange={(e) => setForm({ ...form, category_id: e.target.value })}
-                InputProps={{ sx: { borderRadius: '12px' } }}
+                InputProps={{ sx: { borderRadius: '8px' } }}
               >
                 {categories.map((cat) => (
                   <MenuItem key={cat.id || cat.category_id} value={cat.id || cat.category_id}>
@@ -415,30 +530,30 @@ export default function SellerDashboard() {
             <TextField
               fullWidth
               label="Tautan Berkas Produk (Google Drive / GitHub)"
-              placeholder="Contoh: https://drive.google.com/file/d/1a2b3c4d..."
+              placeholder="Contoh: https://drive.google.com/file/d/..."
               value={form.file_path}
               onChange={(e) => setForm({ ...form, file_path: e.target.value })}
-              InputProps={{ sx: { borderRadius: '12px' } }}
+              InputProps={{ sx: { borderRadius: '8px' } }}
               InputLabelProps={{ shrink: true }}
-              helperText="Tautan ini akan diberikan kepada pembeli setelah mereka membayar."
+              helperText="Tautan ini akan diberikan kepada pembeli setelah membayar."
             />
 
-            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2.5 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2.5 }}>
               <TextField
                 label="URL Gambar/Thumbnail"
                 placeholder="Contoh: https://imgur.com/gambar.png"
                 value={form.thumbnail}
                 onChange={(e) => setForm({ ...form, thumbnail: e.target.value })}
-                InputProps={{ sx: { borderRadius: '12px' } }}
+                InputProps={{ sx: { borderRadius: '8px' } }}
                 InputLabelProps={{ shrink: true }}
-                helperText="Tautan gambar untuk sampul produk."
+                helperText="Tautan gambar sampul produk."
               />
               <TextField
                 select
                 label="Status Produk"
                 value={form.status}
                 onChange={(e) => setForm({ ...form, status: e.target.value })}
-                InputProps={{ sx: { borderRadius: '12px' } }}
+                InputProps={{ sx: { borderRadius: '8px' } }}
               >
                 <MenuItem value="active">Aktif & Ditampilkan</MenuItem>
                 <MenuItem value="inactive">Sembunyikan</MenuItem>
@@ -451,10 +566,11 @@ export default function SellerDashboard() {
             onClick={() => { setOpenDialog(false); resetForm(); }}
             sx={{ 
               textTransform: 'none', 
-              color: '#4b5563',
+              color: '#71717a',
               fontWeight: 600,
               px: 3, py: 1,
-              borderRadius: '10px'
+              borderRadius: '8px',
+              '&:hover': { bgcolor: '#f4f4f5' }
             }}
           >
             Batal
@@ -464,15 +580,15 @@ export default function SellerDashboard() {
             onClick={handleSubmit}
             disabled={submitLoading || !form.title || !form.description || !form.price || !form.category_id || !form.file_path}
             sx={{
-              bgcolor: '#000000',
+              bgcolor: '#09090b',
               color: '#ffffff',
               textTransform: 'none',
               fontWeight: 600,
-              px: 4, py: 1.2,
-              borderRadius: '10px',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-              '&:hover': { bgcolor: '#111827', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' },
-              '&.Mui-disabled': { bgcolor: '#e5e7eb', color: '#9ca3af' }
+              px: 3, py: 1.2,
+              borderRadius: '8px',
+              boxShadow: 'none',
+              '&:hover': { bgcolor: '#27272a', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' },
+              '&.Mui-disabled': { bgcolor: '#e4e4e7', color: '#a1a1aa' }
             }}
           >
             {submitLoading ? 'Menyimpan...' : editingProduct ? 'Simpan Perubahan' : 'Tambah Produk'}
@@ -490,17 +606,19 @@ function StatCard({ label, value }) {
       elevation={0} 
       sx={{ 
         border: '1px solid #EAEAEA', 
-        borderRadius: '8px', 
+        borderRadius: '12px', 
         bgcolor: '#ffffff',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.02)',
-        height: '100%'
+        boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+        height: '100%',
+        transition: 'box-shadow 0.2s',
+        '&:hover': { boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }
       }}
     >
-      <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
-        <Typography variant="body2" sx={{ color: '#666666', fontWeight: 500, mb: 1 }}>
+      <CardContent sx={{ p: 3, pb: '24px !important' }}>
+        <Typography variant="body2" sx={{ color: '#71717a', fontWeight: 600, mb: 1, textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.75rem' }}>
           {label}
         </Typography>
-        <Typography variant="h4" fontWeight={700} color="#000000" sx={{ letterSpacing: '-0.02em' }}>
+        <Typography variant="h4" fontWeight={800} color="#09090b" sx={{ letterSpacing: '-0.02em', fontSize: { xs: '1.75rem', sm: '2.125rem' } }}>
           {value}
         </Typography>
       </CardContent>

@@ -5,7 +5,6 @@ import {
   Button, TextField, Avatar, Divider, IconButton
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import StarIcon from '@mui/icons-material/Star';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
@@ -13,6 +12,7 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ChatBubbleOutlinedIcon from '@mui/icons-material/ChatBubbleOutlined';
 import { apiRequest } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useFetch } from '../hooks/useFetch';
@@ -276,6 +276,28 @@ export default function ProductDetail() {
                   </Button>
                 )}
                 
+                {product.seller?.id !== user?.user_id && (
+                  <Button
+                    variant="outlined"
+                    startIcon={<ChatBubbleOutlinedIcon />}
+                    onClick={() => {
+                      navigate(`/messages?userId=${product.seller?.id}&userName=${encodeURIComponent(product.seller?.name || 'Penjual')}`);
+                    }}
+                    sx={{
+                      borderColor: '#E5E7EB',
+                      color: '#111827',
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      borderRadius: '12px',
+                      px: 3,
+                      '&:hover': { bgcolor: '#F9FAFB', borderColor: '#D1D5DB' },
+                    }}
+                  >
+                    Chat Penjual
+                  </Button>
+                )}
+
                 <IconButton
                   className={isWishlisted(product.id) ? "btn-liked-ring" : ""}
                   onClick={(e) => {

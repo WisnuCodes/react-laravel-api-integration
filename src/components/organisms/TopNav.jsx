@@ -11,11 +11,13 @@ import {
   MenuItem,
   Typography,
   ListItemIcon,
-  Divider
+  Divider,
+  Tooltip
 } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ChatBubbleOutlinedIcon from '@mui/icons-material/ChatBubbleOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import FolderSpecialIcon from '@mui/icons-material/FolderSpecial';
@@ -23,6 +25,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CategoryIcon from '@mui/icons-material/Category';
 import PersonIcon from '@mui/icons-material/Person';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import Logo from '../atoms/Logo';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
@@ -232,14 +235,25 @@ export default function TopNav() {
         {/* RIGHT: Actions & Avatar */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, md: 2 }, ml: 'auto' }}>
           
-          {/* Wishlist & Cart Icons for Buyer */}
+          {/* Chat Icon for ALL logged-in users */}
+          {isLoggedIn && (
+            <Tooltip title="Pesan">
+              <IconButton component={Link} to="/messages" sx={{ color: '#09090b', '&:hover': { bgcolor: '#f4f4f5' } }}>
+                <ChatBubbleOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+
+          {/* Wishlist & Cart Icons for Buyer only */}
           {isBuyer && (
             <Box sx={{ display: 'flex', gap: 1, mr: 1 }}>
-              <IconButton component={Link} to="/wishlist" sx={{ color: '#4B5563', '&:hover': { bgcolor: '#F3F4F6', color: '#111827' } }}>
-                <Badge badgeContent={wishlistItems?.length || 0} color="error" max={99}>
-                  <FavoriteBorderOutlinedIcon fontSize="small" />
-                </Badge>
-              </IconButton>
+              <Tooltip title="Wishlist">
+                <IconButton component={Link} to="/wishlist" sx={{ color: '#09090b', '&:hover': { bgcolor: '#f4f4f5' } }}>
+                  <Badge badgeContent={wishlistItems?.length || 0} color="error" max={99}>
+                    <FavoriteBorderIcon />
+                  </Badge>
+                </IconButton>
+              </Tooltip>
               
               <IconButton component={Link} to="/cart" sx={{ color: '#4B5563', '&:hover': { bgcolor: '#F3F4F6', color: '#111827' } }}>
                 <Badge badgeContent={itemCount} color="error" max={99}>
@@ -294,6 +308,24 @@ export default function TopNav() {
                     </Box>
                   </Box>
                   <Divider sx={{ my: 1, borderColor: '#F3F4F6' }} />
+                  <MenuItem 
+                    component={Link}
+                    to="/profile"
+                    onClick={handleProfileClose}
+                    sx={{ 
+                      py: 1.5, 
+                      px: 2, 
+                      borderRadius: '10px', 
+                      mx: 1, 
+                      mb: 0.5,
+                      color: '#111827',
+                      transition: 'all 0.2s',
+                      '&:hover': { bgcolor: '#F3F4F6' }
+                    }}
+                  >
+                    <ListItemIcon><ManageAccountsIcon fontSize="small" sx={{ color: 'inherit' }} /></ListItemIcon>
+                    <Typography fontWeight={600} fontSize="0.95rem">Pengaturan Profil</Typography>
+                  </MenuItem>
                   <MenuItem 
                     onClick={handleLogout} 
                     sx={{ 

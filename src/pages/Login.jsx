@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { apiRequest } from '../api/client';
 import { Box, Button, TextField, Typography, Alert, Grid } from '@mui/material';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import Logo from '../components/atoms/Logo';
 
 export default function Login() {
   const { login } = useAuth();
@@ -39,9 +39,10 @@ export default function Login() {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', bgcolor: '#ffffff' }}>
+    <Box sx={{ minHeight: '100vh', display: 'flex', bgcolor: { xs: '#f9fafb', md: '#ffffff' } }}>
       <Grid container>
 
+        {/* Desktop Left Side */}
         <Grid 
           item 
           xs={12} 
@@ -56,15 +57,7 @@ export default function Login() {
           }}
         >
           <Box>
-            <Typography 
-              variant="h5" 
-              fontWeight="bold" 
-              component={Link}
-              to="/"
-              sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', color: 'inherit' }}
-            >
-              <AutoAwesomeIcon /> Dibitech
-            </Typography>
+            <Logo color="#ffffff" />
           </Box>
           <Box>
             <Typography variant="h3" fontWeight={700} sx={{ letterSpacing: '-0.03em', mb: 2, lineHeight: 1.2 }}>
@@ -77,28 +70,43 @@ export default function Login() {
           </Box>
         </Grid>
 
+        {/* Right Side (Form) */}
         <Grid 
           item 
           xs={12} 
           md={7} 
           sx={{ 
             display: 'flex', 
+            flexDirection: 'column',
             alignItems: 'center', 
             justifyContent: 'center',
-            p: { xs: 3, sm: 6, md: 10 }
+            p: { xs: 2, sm: 6, md: 10 }
           }}
         >
-          <Box sx={{ width: '100%', maxWidth: 400 }}>
-            <Typography variant="h4" component="h1" gutterBottom sx={{ color: '#000000', fontWeight: 700, letterSpacing: '-0.03em' }}>
+          {/* Mobile Logo */}
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, mb: 4, mt: 4 }}>
+            <Logo color="#111827" />
+          </Box>
+
+          <Box sx={{ 
+            width: '100%', 
+            maxWidth: 440,
+            bgcolor: '#ffffff',
+            p: { xs: 4, md: 0 },
+            borderRadius: { xs: '24px', md: 0 },
+            boxShadow: { xs: '0 20px 40px -15px rgba(0,0,0,0.05)', md: 'none' },
+            border: { xs: '1px solid #e5e7eb', md: 'none' }
+          }}>
+            <Typography variant="h4" component="h1" gutterBottom sx={{ color: '#111827', fontWeight: 800, letterSpacing: '-0.03em' }}>
               Welcome Back
             </Typography>
-            <Typography variant="body2" color="#6b7280" sx={{ mb: 4, fontSize: '0.95rem' }}>
+            <Typography variant="body1" color="#6b7280" sx={{ mb: 4 }}>
               Masukkan detail akun Anda untuk melanjutkan.
             </Typography>
 
-            {error && <Alert severity="error" sx={{ mb: 3, borderRadius: '8px' }}>{error}</Alert>}
+            {error && <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>{error}</Alert>}
 
-            <Box component="form" onSubmit={handleLogin} sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+            <Box component="form" onSubmit={handleLogin} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               <TextField
                 label="Email"
                 type="email"
@@ -108,7 +116,15 @@ export default function Login() {
                 required
                 fullWidth
                 InputLabelProps={{ shrink: true }}
-                sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px' } }}
+                sx={{ 
+                  '& .MuiOutlinedInput-root': { 
+                    borderRadius: '12px',
+                    bgcolor: '#f9fafb',
+                    '& fieldset': { borderColor: '#e5e7eb' },
+                    '&:hover fieldset': { borderColor: '#d1d5db' },
+                    '&.Mui-focused fieldset': { borderColor: '#4f46e5' },
+                  }
+                }}
               />
               <TextField
                 label="Password"
@@ -119,7 +135,15 @@ export default function Login() {
                 required
                 fullWidth
                 InputLabelProps={{ shrink: true }}
-                sx={{ '& .MuiOutlinedInput-root': { borderRadius: '8px' } }}
+                sx={{ 
+                  '& .MuiOutlinedInput-root': { 
+                    borderRadius: '12px',
+                    bgcolor: '#f9fafb',
+                    '& fieldset': { borderColor: '#e5e7eb' },
+                    '&:hover fieldset': { borderColor: '#d1d5db' },
+                    '&.Mui-focused fieldset': { borderColor: '#4f46e5' },
+                  }
+                }}
               />
 
               <Button 
@@ -130,19 +154,21 @@ export default function Login() {
                 disableElevation
                 sx={{ 
                   mt: 1, 
-                  py: 1.5, 
-                  borderRadius: '8px',
-                  bgcolor: '#000000',
+                  py: 1.8, 
+                  borderRadius: '12px',
+                  bgcolor: '#111827',
                   color: '#ffffff',
                   fontWeight: 600,
-                  '&:hover': { bgcolor: '#333333' }
+                  fontSize: '1rem',
+                  textTransform: 'none',
+                  '&:hover': { bgcolor: '#374151' }
                 }}
               >
                 {loading ? 'Memproses...' : 'Login'}
               </Button>
 
               <Typography variant="body2" sx={{ mt: 2, color: '#6b7280', textAlign: 'center' }}>
-                Belum punya akun? <Link to="/register" style={{ textDecoration: 'none', color: '#000000', fontWeight: 600 }}>Daftar di sini</Link>
+                Belum punya akun? <Link to="/register" style={{ textDecoration: 'none', color: '#4f46e5', fontWeight: 600 }}>Daftar di sini</Link>
               </Typography>
             </Box>
           </Box>

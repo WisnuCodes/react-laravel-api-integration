@@ -22,6 +22,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import { useAuth } from '../../context/AuthContext';
 
 export default function BottomNav() {
@@ -194,6 +196,46 @@ export default function BottomNav() {
               </Button>
             </ListItem>
           )}
+
+          {isLoggedIn && user?.role === 'buyer' && (
+            <ListItem disablePadding sx={{ mb: 1 }}>
+              <Button
+                fullWidth
+                component={Link}
+                to="/following"
+                variant="text"
+                onClick={() => setDrawerOpen(false)}
+                startIcon={<PeopleOutlinedIcon />}
+                sx={{ 
+                  color: '#111827', 
+                  justifyContent: 'flex-start',
+                  px: 2, py: 1.5, fontWeight: 600, borderRadius: '12px',
+                  '&:hover': { bgcolor: '#f3f4f6' }
+                }}
+              >
+                Kreator Diikuti
+              </Button>
+            </ListItem>
+          )}
+
+          <ListItem disablePadding sx={{ mb: 1 }}>
+            <Button
+              fullWidth
+              component={Link}
+              to="/profile"
+              variant="text"
+              onClick={() => setDrawerOpen(false)}
+              startIcon={<ManageAccountsIcon />}
+              sx={{ 
+                color: '#111827', 
+                justifyContent: 'flex-start',
+                px: 2, py: 1.5, fontWeight: 600, borderRadius: '12px',
+                '&:hover': { bgcolor: '#f3f4f6' }
+              }}
+            >
+              Pengaturan Profil
+            </Button>
+          </ListItem>
 
           <ListItem disablePadding sx={{ mb: 1 }}>
             <Button

@@ -215,6 +215,7 @@ export default function ProductDetail() {
                   textTransform: 'none', 
                   fontWeight: 600,
                   borderRadius: '12px',
+                  width: { xs: '100%', sm: 'auto' },
                   '&:hover': { bgcolor: '#F3F4F6', borderColor: '#9CA3AF' }
                 }}
               >
@@ -257,7 +258,7 @@ export default function ProductDetail() {
                   {cartMsg.text}
                 </Alert>
               )}
-              <Box sx={{ display: 'flex', gap: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
                 {purchasedItem ? (
                   <Button
                     variant="contained"
@@ -335,6 +336,8 @@ export default function ProductDetail() {
                       fontSize: '1rem',
                       borderRadius: '12px',
                       px: 3,
+                      flexShrink: 0,
+                      width: { xs: '100%', sm: 'auto' },
                       '&:hover': { bgcolor: '#F9FAFB', borderColor: '#D1D5DB' },
                     }}
                   >
@@ -349,19 +352,16 @@ export default function ProductDetail() {
                     toggleWishlist(product.id);
                   }}
                   sx={{
-                    bgcolor: '#ffffff',
-                    border: '1px solid #E5E7EB',
+                    color: isWishlisted(product.id) ? '#EF4444' : '#6B7280',
+                    border: '1px solid',
+                    borderColor: isWishlisted(product.id) ? '#FCA5A5' : '#D1D5DB',
+                    bgcolor: isWishlisted(product.id) ? '#FEF2F2' : '#ffffff',
+                    width: { xs: '100%', sm: '54px' },
+                    height: '54px',
                     borderRadius: '12px',
-                    width: 52,
-                    height: 52,
-                    color: isWishlisted(product.id) ? '#EF4444' : '#9CA3AF',
-                    '&:hover': { 
-                      bgcolor: isWishlisted(product.id) ? '#FEE2E2' : '#F3F4F6', 
-                      color: isWishlisted(product.id) ? '#EF4444' : '#6B7280',
-                      border: '1px solid',
-                      borderColor: isWishlisted(product.id) ? '#FECACA' : '#D1D5DB'
-                    },
-                    transition: 'all 0.2s',
+                    flexShrink: 0,
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': { bgcolor: isWishlisted(product.id) ? '#FEE2E2' : '#F9FAFB' },
                   }}
                 >
                   {isWishlisted(product.id) ? <FavoriteIcon className="icon-liked" /> : <FavoriteBorderIcon />}

@@ -142,6 +142,9 @@ export default function Orders() {
         <Tabs
           value={activeTab}
           onChange={(_, v) => setActiveTab(v)}
+          variant="scrollable"
+          scrollButtons="auto"
+          allowScrollButtonsMobile
           sx={{
             mb: 4,
             '& .MuiTabs-indicator': { bgcolor: '#111827', height: 3, borderRadius: '99px' },
@@ -206,12 +209,12 @@ export default function Orders() {
                   </Box>
 
                   {/* Order Body */}
-                  <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 3 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, flexGrow: 1, minWidth: 0 }}>
+                  <Box sx={{ p: { xs: 2, sm: 3 }, display: 'flex', alignItems: { xs: 'flex-start', sm: 'center' }, justifyContent: 'space-between', flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 2, sm: 3 } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2.5, flexGrow: 1, minWidth: 0, width: '100%' }}>
                       {/* Product Thumbnail */}
                       <Box
                         sx={{
-                          width: 80, height: 80, borderRadius: '14px', overflow: 'hidden', bgcolor: '#F3F4F6', flexShrink: 0,
+                          width: { xs: 64, sm: 80 }, height: { xs: 64, sm: 80 }, borderRadius: '12px', overflow: 'hidden', bgcolor: '#F3F4F6', flexShrink: 0,
                           border: '1px solid #E5E7EB'
                         }}
                       >
@@ -219,22 +222,22 @@ export default function Orders() {
                           <Box component="img" src={order.product.thumbnail} alt={order.product?.title} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
                           <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <StorefrontIcon sx={{ color: '#9CA3AF', fontSize: 32 }} />
+                            <StorefrontIcon sx={{ color: '#9CA3AF', fontSize: { xs: 24, sm: 32 } }} />
                           </Box>
                         )}
                       </Box>
 
                       {/* Product Info */}
-                      <Box sx={{ minWidth: 0 }}>
-                        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#111827', lineHeight: 1.3, mb: 0.5, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <Box sx={{ minWidth: 0, pt: 0.5 }}>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#111827', lineHeight: 1.3, mb: 0.5, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                           {order.product?.title || 'Produk tidak tersedia'}
                         </Typography>
                         {order.product?.category && (
-                          <Chip label={order.product.category} size="small" sx={{ bgcolor: '#F3F4F6', color: '#4B5563', fontWeight: 600, height: 24, fontSize: '0.75rem', mb: 1 }} />
+                          <Chip label={order.product.category} size="small" sx={{ bgcolor: '#F3F4F6', color: '#4B5563', fontWeight: 600, height: 22, fontSize: '0.7rem', mb: 1 }} />
                         )}
                         {order.seller?.name && (
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Avatar sx={{ width: 22, height: 22, bgcolor: '#111827', fontSize: '0.65rem', fontWeight: 700 }}>
+                            <Avatar sx={{ width: 20, height: 20, bgcolor: '#111827', fontSize: '0.6rem', fontWeight: 700 }}>
                               {order.seller.name.charAt(0).toUpperCase()}
                             </Avatar>
                             <Typography variant="caption" sx={{ color: '#6B7280', fontWeight: 600 }}>
@@ -246,8 +249,18 @@ export default function Orders() {
                     </Box>
 
                     {/* Price & Actions */}
-                    <Box sx={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1.5 }}>
-                      <Typography variant="h5" sx={{ fontWeight: 900, color: '#111827', letterSpacing: '-0.02em' }}>
+                    <Box sx={{ 
+                      textAlign: { xs: 'left', sm: 'right' }, 
+                      display: 'flex', 
+                      flexDirection: { xs: 'row', sm: 'column' }, 
+                      alignItems: { xs: 'center', sm: 'flex-end' }, 
+                      justifyContent: 'space-between', 
+                      gap: 1.5, 
+                      width: { xs: '100%', sm: 'auto' }, 
+                      pt: { xs: 2, sm: 0 }, 
+                      borderTop: { xs: '1px dashed #E5E7EB', sm: 'none' } 
+                    }}>
+                      <Typography variant="h5" sx={{ fontWeight: 900, color: '#111827', letterSpacing: '-0.02em', fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                         Rp {Number(order.amount || 0).toLocaleString('id-ID')}
                       </Typography>
                       <Box sx={{ display: 'flex', gap: 1 }}>

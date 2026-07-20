@@ -22,6 +22,7 @@ export default function VerifyOtp() {
   const { updateUser } = useAuth();
   
   const email = location.state?.email;
+  const autoOtp = location.state?.autoOtp;
 
   useEffect(() => {
     // Jika tidak ada email dari state (akses langsung URL), kembalikan ke register
@@ -29,6 +30,13 @@ export default function VerifyOtp() {
       navigate('/register');
     }
   }, [email, navigate]);
+
+  useEffect(() => {
+    if (autoOtp && typeof autoOtp === 'string' && autoOtp.length === 6) {
+      setOtp(autoOtp.split(''));
+      setSuccess(`SIMULASI EMAIL OTP: Karena server SMTP diblokir di Railway, kode OTP Anda (${autoOtp}) telah diisi secara otomatis untuk kemudahan presentasi/testing!`);
+    }
+  }, [autoOtp]);
 
   useEffect(() => {
     let timer;

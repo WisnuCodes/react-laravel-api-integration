@@ -36,7 +36,7 @@ export default function Register() {
       });
 
       if (response.success) {
-        navigate('/verify-otp', { state: { email: email } });
+        navigate('/verify-otp', { state: { email: email, autoOtp: response.data?.otp_code || response.otp_code } });
       } else {
         let errorMsg = response.message || 'Registrasi gagal.';
         if (response.errors && typeof response.errors === 'object') {

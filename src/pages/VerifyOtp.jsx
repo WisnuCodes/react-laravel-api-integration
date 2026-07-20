@@ -102,7 +102,13 @@ export default function VerifyOtp() {
       localStorage.setItem('user', JSON.stringify(user));
       updateUser(user);
 
-      navigate('/dashboard', { replace: true });
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard', { replace: true });
+      } else if (user.role === 'seller') {
+        navigate('/seller/dashboard', { replace: true });
+      } else {
+        navigate('/', { replace: true }); // Pembeli diarahkan ke beranda
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Kode OTP salah atau telah kedaluwarsa.');
     } finally {

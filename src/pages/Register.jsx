@@ -38,7 +38,12 @@ export default function Register() {
       if (response.success) {
         navigate('/verify-otp', { state: { email: email } });
       } else {
-        setError(response.message || 'Registrasi gagal.');
+        let errorMsg = response.message || 'Registrasi gagal.';
+        if (response.errors && typeof response.errors === 'object') {
+          const firstKey = Object.keys(response.errors)[0];
+          errorMsg = response.errors[firstKey][0];
+        }
+        setError(errorMsg);
       }
     } catch (err) {
       console.error("Register error:", err);

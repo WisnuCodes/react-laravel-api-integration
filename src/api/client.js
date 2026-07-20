@@ -13,7 +13,6 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  // Prevent browser caching for polling GET requests
   config.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
   config.headers['Pragma'] = 'no-cache';
   config.headers['Expires'] = '0';

@@ -9,6 +9,7 @@ import BottomNav from './components/organisms/BottomNav';
 import Footer from './components/organisms/Footer';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import VerifyOtp from './pages/VerifyOtp';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import Users from './pages/Users';
@@ -28,6 +29,10 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import StoreProfile from './pages/StoreProfile';
 import Following from './pages/Following';
+import NotFound from './pages/NotFound';
+import Forbidden from './pages/Forbidden';
+import ServerError from './pages/ServerError';
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
 const theme = createTheme({
@@ -49,7 +54,7 @@ const theme = createTheme({
 function AppContent() {
   const location = useLocation();
 
-  const hideLayout = location.pathname === '/login' || location.pathname === '/register';
+  const hideLayout = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/verify-otp';
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#ffffff' }}>
@@ -66,27 +71,48 @@ function AppContent() {
       >
         {!hideLayout && <TopNav />}
 
-        <Box sx={{ flexGrow: 1, pb: { xs: hideLayout ? 0 : 8, md: 0 } }}>
+        <Box sx={{ flexGrow: 1, pt: hideLayout ? 0 : '72px', pb: { xs: hideLayout ? 0 : 8, md: 0 } }}>
           <Routes>
+            {/* Rute Publik */}
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/verify-otp" element={<VerifyOtp />} />
             <Route path="/products" element={<Products />} />
             <Route path="/products/:id" element={<ProductDetail />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/users/:id" element={<UserDetail />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/library" element={<Library />} />
-            <Route path="/seller/dashboard" element={<SellerDashboard />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/messages" element={<Messages />} />
+            <Route path="/store/:username" element={<StoreProfile />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/store/:username" element={<StoreProfile />} />
-            <Route path="/following" element={<Following />} />
+            <Route path="/forbidden" element={<Forbidden />} />
+            <Route path="/500" element={<ServerError />} />
+            <Route path="*" element={<NotFound />} />
+
+            {/* Rute Khusus Admin */}
+            <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/users/:id" element={<UserDetail />} />
+            </Route>
+
+            {/* Rute Khusus Penjual / Kreator */}
+            <Route element={<ProtectedRoute allowedRoles={['seller']} />}>
+              <Route path="/seller/dashboard" element={<SellerDashboard />} />
+            </Route>
+
+            {/* Rute Khusus Pembeli */}
+            <Route element={<ProtectedRoute allowedRoles={['buyer']} />}>
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/library" element={<Library />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/following" element={<Following />} />
+            </Route>
+
+            {/* Rute Untuk Semua yang Sudah Login (Bebas Role) */}
+            <Route element={<ProtectedRoute allowedRoles={[]} />}>
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/messages" element={<Messages />} />
+            </Route>
           </Routes>
         </Box>
 

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { keyframes } from '@mui/system';
 import { 
   AppBar, 
   Toolbar, 
@@ -7,8 +8,8 @@ import {
   IconButton, 
   Badge, 
   Avatar, 
-  Menu, 
   MenuItem,
+  MenuList,
   Typography,
   ListItemIcon,
   Divider,
@@ -33,9 +34,18 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useFetch } from '../../hooks/useFetch';
 
+const dropInCenter = keyframes`
+  0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+`;
+
+const dropInRight = keyframes`
+  0% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+`;
+
 export default function TopNav() {
   const location = useLocation();
-  const navigate = useNavigate();
   const { user, isLoggedIn, logout } = useAuth();
   const { itemCount } = useCart();
   const { wishlistItems } = useWishlist();
@@ -46,34 +56,13 @@ export default function TopNav() {
 
   const { data: categories } = useFetch('/categories', [], 300000);
 
-  const [produkAnchorEl, setProdukAnchorEl] = useState(null);
-  const [akunAnchorEl, setAkunAnchorEl] = useState(null);
-  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
-
-  // --- Dropdown Handlers ---
-  const openProduk = Boolean(produkAnchorEl);
-  const openAkun = Boolean(akunAnchorEl);
-  const openProfile = Boolean(profileAnchorEl);
-
-  const handleProdukClick = (event) => setProdukAnchorEl(event.currentTarget);
-  const handleProdukClose = () => setProdukAnchorEl(null);
-
-  const handleAkunClick = (event) => setAkunAnchorEl(event.currentTarget);
-  const handleAkunClose = () => setAkunAnchorEl(null);
-
-  const handleProfileClick = (event) => setProfileAnchorEl(event.currentTarget);
-  const handleProfileClose = () => setProfileAnchorEl(null);
-
-  const handleLogout = () => {
-    handleProfileClose();
-    handleAkunClose();
-    logout();
-    navigate('/');
-  };
+  const [openProduk, setOpenProduk] = useState(false);
+  const [openAkun, setOpenAkun] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
 
   return (
     <AppBar 
-      position="sticky" 
+      position="fixed" 
       elevation={0} 
       sx={{ 
         bgcolor: 'rgba(255, 255, 255, 0.85)',
@@ -110,59 +99,64 @@ export default function TopNav() {
           </Button>
 
           {/* 2. Produk (Dropdown Menu) */}
-          <Button 
-            disableRipple
-            onClick={handleProdukClick}
-            endIcon={<KeyboardArrowDownIcon sx={{ transition: '0.2s', transform: openProduk ? 'rotate(180deg)' : 'none' }} />}
-            sx={{ 
-              color: openProduk || location.pathname.includes('/products') ? '#111827' : '#4B5563', 
-              fontWeight: 600, 
-              fontSize: '0.9rem',
-              '&:hover': { bgcolor: '#F3F4F6', color: '#111827' },
-              borderRadius: '8px', px: 2, py: 1
-            }}
+          <Box 
+            onMouseEnter={() => setOpenProduk(true)} 
+            onMouseLeave={() => setOpenProduk(false)}
+            onClick={() => setOpenProduk(false)}
+            sx={{ position: 'relative' }}
           >
-            Katalog Produk
-          </Button>
-          <Menu
-            anchorEl={produkAnchorEl}
-            open={openProduk}
-            onClose={handleProdukClose}
-            transformOrigin={{ horizontal: 'center', vertical: 'top' }}
-            anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
-            PaperProps={{
-              elevation: 0,
-              sx: {
-                overflow: 'visible', filter: 'drop-shadow(0px 8px 24px rgba(0,0,0,0.1))',
-                mt: 1, minWidth: 220, borderRadius: '16px', border: '1px solid #E5E7EB'
-              },
-            }}
-          >
-            <MenuItem component={Link} to="/products" onClick={handleProdukClose} sx={{ py: 1.5, px: 2 }}>
-              <ListItemIcon><CategoryIcon fontSize="small" sx={{ color: '#4B5563' }} /></ListItemIcon>
-              <Typography fontWeight={600} fontSize="0.9rem">Semua Produk</Typography>
-            </MenuItem>
-            <Divider sx={{ my: 0.5 }} />
-            
-            {categories && categories.length > 0 ? (
-              categories.map((cat) => (
-                <MenuItem key={cat.id} component={Link} to={`/products?category=${cat.id}`} onClick={handleProdukClose} sx={{ py: 1.5, px: 2 }}>
-                  <Typography fontWeight={500} fontSize="0.85rem" sx={{ ml: 4 }}>{cat.name}</Typography>
-                </MenuItem>
-              ))
-            ) : (
-              <MenuItem disabled sx={{ py: 1.5, px: 2 }}>
-                <Typography fontWeight={500} fontSize="0.85rem" sx={{ ml: 4 }}>Memuat...</Typography>
-              </MenuItem>
+            <Button 
+              disableRipple
+              endIcon={<KeyboardArrowDownIcon sx={{ transition: '0.2s', transform: openProduk ? 'rotate(180deg)' : 'none' }} />}
+              sx={{ 
+                color: openProduk || location.pathname.includes('/products') ? '#111827' : '#4B5563', 
+                fontWeight: 600, 
+                fontSize: '0.9rem',
+                '&:hover': { bgcolor: '#F3F4F6', color: '#111827' },
+                borderRadius: '8px', px: 2, py: 1
+              }}
+            >
+              Katalog Produk
+            </Button>
+            {openProduk && (
+              <Box sx={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', pt: 1.5, zIndex: 9999, animation: `${dropInCenter} 0.15s ease-out` }}>
+                <MenuList sx={{ minWidth: 260, borderRadius: '12px', border: '1px solid #E5E7EB', bgcolor: '#fff', boxShadow: '0 10px 38px -10px rgba(22, 23, 24, 0.15), 0 10px 20px -15px rgba(22, 23, 24, 0.1)', p: 1 }}>
+                  <MenuItem component={Link} to="/products" sx={{ p: 1, borderRadius: '6px', transition: 'all 0.1s', '&:hover': { bgcolor: '#F3F4F6' } }}>
+                    <Box sx={{ color: '#4B5563', mr: 1.5, display: 'flex', alignItems: 'center' }}>
+                      <CategoryIcon fontSize="small" />
+                    </Box>
+                    <Box>
+                      <Typography fontWeight={600} fontSize="0.85rem" sx={{ color: '#111827' }}>Semua Produk</Typography>
+                      <Typography variant="body2" color="#6B7280" fontSize="0.75rem">Lihat katalog lengkap</Typography>
+                    </Box>
+                  </MenuItem>
+                  <Divider sx={{ my: 1, borderColor: '#F3F4F6' }} />
+                  {categories && categories.length > 0 ? (
+                    categories.map((cat) => (
+                      <MenuItem key={cat.id} component={Link} to={`/products?category=${cat.id}`} sx={{ p: 1, borderRadius: '6px', transition: 'all 0.1s', '&:hover': { bgcolor: '#F3F4F6' } }}>
+                        <Typography fontWeight={500} fontSize="0.85rem" sx={{ color: '#111827', ml: 4 }}>{cat.name}</Typography>
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled sx={{ p: 1, borderRadius: '6px' }}>
+                      <Typography fontWeight={500} fontSize="0.85rem" sx={{ ml: 4 }}>Memuat...</Typography>
+                    </MenuItem>
+                  )}
+                </MenuList>
+              </Box>
             )}
-          </Menu>
+          </Box>
 
           {/* 3. Akun & Manajemen (Dropdown Menu - Only if Logged In) */}
           {isLoggedIn && (
-            <>
+            <Box 
+              onMouseEnter={() => setOpenAkun(true)}
+              onMouseLeave={() => setOpenAkun(false)}
+              onClick={() => setOpenAkun(false)}
+              sx={{ position: 'relative' }}
+            >
               <Button 
                 disableRipple
-                onClick={handleAkunClick}
                 endIcon={<KeyboardArrowDownIcon sx={{ transition: '0.2s', transform: openAkun ? 'rotate(180deg)' : 'none' }} />}
                 sx={{ 
                   color: openAkun ? '#111827' : '#4B5563', 
@@ -174,65 +168,76 @@ export default function TopNav() {
               >
                 Manajemen Akun
               </Button>
-              <Menu
-                anchorEl={akunAnchorEl}
-                open={openAkun}
-                onClose={handleAkunClose}
-                transformOrigin={{ horizontal: 'center', vertical: 'top' }}
-                anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
-                PaperProps={{
-                  elevation: 0,
-                  sx: {
-                    overflow: 'visible', filter: 'drop-shadow(0px 8px 24px rgba(0,0,0,0.1))',
-                    mt: 1, minWidth: 240, borderRadius: '16px', border: '1px solid #E5E7EB'
-                  },
-                }}
-              >
-                <Box sx={{ px: 2.5, py: 1.5 }}>
-                  <Typography variant="body2" color="text.secondary">Masuk sebagai</Typography>
-                  <Typography variant="subtitle2" fontWeight={800} noWrap>{user?.name}</Typography>
-                </Box>
-                <Divider sx={{ mb: 1 }} />
-                
-                {/* Buyer Links */}
-                {isBuyer && (
-                  <>
-                    <MenuItem component={Link} to="/library" onClick={handleAkunClose} sx={{ py: 1.5, px: 2 }}>
-                      <ListItemIcon><FolderSpecialIcon fontSize="small" sx={{ color: '#10B981' }} /></ListItemIcon>
-                      <Typography fontWeight={600} fontSize="0.9rem">My Library</Typography>
-                    </MenuItem>
-                    <MenuItem component={Link} to="/orders" onClick={handleAkunClose} sx={{ py: 1.5, px: 2 }}>
-                      <ListItemIcon><StorefrontIcon fontSize="small" sx={{ color: '#4B5563' }} /></ListItemIcon>
-                      <Typography fontWeight={600} fontSize="0.9rem">Pesanan Saya</Typography>
-                    </MenuItem>
-                    <MenuItem component={Link} to="/following" onClick={handleAkunClose} sx={{ py: 1.5, px: 2 }}>
-                      <ListItemIcon><PeopleOutlinedIcon fontSize="small" sx={{ color: '#6366F1' }} /></ListItemIcon>
-                      <Typography fontWeight={600} fontSize="0.9rem">Kreator Diikuti</Typography>
-                    </MenuItem>
-                  </>
-                )}
+              {openAkun && (
+                <Box sx={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', pt: 1.5, zIndex: 9999, animation: `${dropInCenter} 0.15s ease-out` }}>
+                  <MenuList sx={{ minWidth: 260, borderRadius: '12px', border: '1px solid #E5E7EB', bgcolor: '#fff', boxShadow: '0 10px 38px -10px rgba(22, 23, 24, 0.15), 0 10px 20px -15px rgba(22, 23, 24, 0.1)', p: 1 }}>
+                    <Box sx={{ px: 1, py: 0.5, mb: 0.5 }}>
+                      <Typography variant="body2" sx={{ color: '#6B7280', fontSize: '0.75rem', fontWeight: 600 }}>Aktivitas Anda</Typography>
+                    </Box>
+                    
+                    {/* Buyer Links */}
+                    {isBuyer && (
+                      <>
+                        <MenuItem component={Link} to="/library" sx={{ p: 1, borderRadius: '6px', mb: 0.5, transition: 'all 0.1s', '&:hover': { bgcolor: '#F3F4F6' } }}>
+                          <Box sx={{ color: '#4B5563', mr: 1.5, display: 'flex', alignItems: 'center' }}><FolderSpecialIcon fontSize="small" /></Box>
+                          <Box>
+                            <Typography fontWeight={600} fontSize="0.85rem" sx={{ color: '#111827' }}>My Library</Typography>
+                            <Typography variant="body2" color="#6B7280" fontSize="0.75rem">Akses produk digital</Typography>
+                          </Box>
+                        </MenuItem>
+                        <MenuItem component={Link} to="/orders" sx={{ p: 1, borderRadius: '6px', mb: 0.5, transition: 'all 0.1s', '&:hover': { bgcolor: '#F3F4F6' } }}>
+                          <Box sx={{ color: '#4B5563', mr: 1.5, display: 'flex', alignItems: 'center' }}><StorefrontIcon fontSize="small" /></Box>
+                          <Box>
+                            <Typography fontWeight={600} fontSize="0.85rem" sx={{ color: '#111827' }}>Pesanan Saya</Typography>
+                            <Typography variant="body2" color="#6B7280" fontSize="0.75rem">Riwayat transaksi</Typography>
+                          </Box>
+                        </MenuItem>
+                        <MenuItem component={Link} to="/following" sx={{ p: 1, borderRadius: '6px', transition: 'all 0.1s', '&:hover': { bgcolor: '#F3F4F6' } }}>
+                          <Box sx={{ color: '#4B5563', mr: 1.5, display: 'flex', alignItems: 'center' }}><PeopleOutlinedIcon fontSize="small" /></Box>
+                          <Box>
+                            <Typography fontWeight={600} fontSize="0.85rem" sx={{ color: '#111827' }}>Kreator Diikuti</Typography>
+                            <Typography variant="body2" color="#6B7280" fontSize="0.75rem">Daftar toko favorit</Typography>
+                          </Box>
+                        </MenuItem>
+                      </>
+                    )}
 
-                {/* Seller / Admin Links */}
-                {isSeller && (
-                  <MenuItem component={Link} to="/seller/dashboard" onClick={handleAkunClose} sx={{ py: 1.5, px: 2 }}>
-                    <ListItemIcon><DashboardIcon fontSize="small" sx={{ color: '#3B82F6' }} /></ListItemIcon>
-                    <Typography fontWeight={600} fontSize="0.9rem">Dasbor Seller</Typography>
-                  </MenuItem>
-                )}
-                {isAdmin && (
-                  <>
-                    <MenuItem component={Link} to="/admin/dashboard" onClick={handleAkunClose} sx={{ py: 1.5, px: 2 }}>
-                      <ListItemIcon><DashboardIcon fontSize="small" sx={{ color: '#8B5CF6' }} /></ListItemIcon>
-                      <Typography fontWeight={600} fontSize="0.9rem">Dasbor Admin</Typography>
-                    </MenuItem>
-                    <MenuItem component={Link} to="/users" onClick={handleAkunClose} sx={{ py: 1.5, px: 2 }}>
-                      <ListItemIcon><PersonIcon fontSize="small" sx={{ color: '#4B5563' }} /></ListItemIcon>
-                      <Typography fontWeight={600} fontSize="0.9rem">Kelola Pengguna</Typography>
-                    </MenuItem>
-                  </>
-                )}
-              </Menu>
-            </>
+                    {/* Seller / Admin Links */}
+                    {isSeller && (
+                      <>
+                        <Divider sx={{ my: 1, borderColor: '#F3F4F6' }} />
+                        <MenuItem component={Link} to="/seller/dashboard" sx={{ p: 1, borderRadius: '6px', transition: 'all 0.1s', '&:hover': { bgcolor: '#F3F4F6' } }}>
+                          <Box sx={{ color: '#4B5563', mr: 1.5, display: 'flex', alignItems: 'center' }}><DashboardIcon fontSize="small" /></Box>
+                          <Box>
+                            <Typography fontWeight={600} fontSize="0.85rem" sx={{ color: '#111827' }}>Dasbor Seller</Typography>
+                            <Typography variant="body2" color="#6B7280" fontSize="0.75rem">Kelola toko Anda</Typography>
+                          </Box>
+                        </MenuItem>
+                      </>
+                    )}
+                    {isAdmin && (
+                      <>
+                        <Divider sx={{ my: 1, borderColor: '#F3F4F6' }} />
+                        <MenuItem component={Link} to="/admin/dashboard" sx={{ p: 1, borderRadius: '6px', mb: 0.5, transition: 'all 0.1s', '&:hover': { bgcolor: '#F3F4F6' } }}>
+                          <Box sx={{ color: '#4B5563', mr: 1.5, display: 'flex', alignItems: 'center' }}><DashboardIcon fontSize="small" /></Box>
+                          <Box>
+                            <Typography fontWeight={600} fontSize="0.85rem" sx={{ color: '#111827' }}>Dasbor Admin</Typography>
+                            <Typography variant="body2" color="#6B7280" fontSize="0.75rem">Pusat kendali</Typography>
+                          </Box>
+                        </MenuItem>
+                        <MenuItem component={Link} to="/users" sx={{ p: 1, borderRadius: '6px', transition: 'all 0.1s', '&:hover': { bgcolor: '#F3F4F6' } }}>
+                          <Box sx={{ color: '#4B5563', mr: 1.5, display: 'flex', alignItems: 'center' }}><PersonIcon fontSize="small" /></Box>
+                          <Box>
+                            <Typography fontWeight={600} fontSize="0.85rem" sx={{ color: '#111827' }}>Kelola Pengguna</Typography>
+                            <Typography variant="body2" color="#6B7280" fontSize="0.75rem">Daftar semua akun</Typography>
+                          </Box>
+                        </MenuItem>
+                      </>
+                    )}
+                  </MenuList>
+                </Box>
+              )}
+            </Box>
           )}
 
         </Box>
@@ -271,84 +276,55 @@ export default function TopNav() {
           {/* User Profile Avatar or Login/Signup */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
             {isLoggedIn ? (
-              <>
+              <Box 
+                onMouseEnter={() => setOpenProfile(true)}
+                onMouseLeave={() => setOpenProfile(false)}
+                onClick={() => setOpenProfile(false)}
+                sx={{ position: 'relative' }}
+              >
                 <IconButton 
-                  onClick={handleProfileClick}
                   sx={{ p: 0.5, border: '2px solid transparent', '&:hover': { borderColor: '#E5E7EB' }, transition: 'all 0.2s', ml: 1 }}
                 >
                   <Avatar sx={{ width: 40, height: 40, bgcolor: '#111827', fontSize: '1.1rem', fontWeight: 700 }}>
                     {user?.name?.charAt(0)?.toUpperCase()}
                   </Avatar>
                 </IconButton>
-                <Menu
-                  anchorEl={profileAnchorEl}
-                  open={openProfile}
-                  onClose={handleProfileClose}
-                  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                  PaperProps={{
-                    elevation: 0,
-                    sx: {
-                      overflow: 'visible', 
-                      filter: 'drop-shadow(0px 12px 32px rgba(0,0,0,0.12))',
-                      mt: 1.5, 
-                      minWidth: 260, 
-                      borderRadius: '16px', 
-                      border: '1px solid #E5E7EB',
-                      p: 1
-                    },
-                  }}
-                >
-                  <Box sx={{ px: 2, py: 1.5, display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Avatar sx={{ width: 48, height: 48, bgcolor: '#F3F4F6', color: '#111827', fontWeight: 800, fontSize: '1.2rem', border: '1px solid #E5E7EB' }}>
-                      {user?.name?.charAt(0)?.toUpperCase()}
-                    </Avatar>
-                    <Box sx={{ overflow: 'hidden' }}>
-                      <Typography variant="subtitle1" fontWeight={800} noWrap sx={{ color: '#111827', lineHeight: 1.2, mb: 0.2 }}>
-                        {user?.name}
-                      </Typography>
-                      <Typography variant="body2" color="#6B7280" noWrap sx={{ fontSize: '0.85rem' }}>
-                        {user?.email}
-                      </Typography>
-                    </Box>
+                {openProfile && (
+                  <Box sx={{ position: 'absolute', top: '100%', right: 0, pt: 1.5, zIndex: 9999, animation: `${dropInRight} 0.15s ease-out` }}>
+                    <MenuList sx={{ minWidth: 240, borderRadius: '12px', border: '1px solid #E5E7EB', bgcolor: '#fff', boxShadow: '0 10px 38px -10px rgba(22, 23, 24, 0.15), 0 10px 20px -15px rgba(22, 23, 24, 0.1)', p: 1 }}>
+                      <Box sx={{ px: 1, py: 1, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                        <Avatar sx={{ width: 36, height: 36, bgcolor: '#111827', color: '#fff', fontWeight: 600, fontSize: '1rem' }}>
+                          {user?.name?.charAt(0)?.toUpperCase()}
+                        </Avatar>
+                        <Box sx={{ overflow: 'hidden' }}>
+                          <Typography variant="subtitle2" fontWeight={600} noWrap sx={{ color: '#111827', lineHeight: 1.2 }}>
+                            {user?.name}
+                          </Typography>
+                          <Typography variant="body2" color="#6B7280" noWrap sx={{ fontSize: '0.75rem' }}>
+                            {user?.email}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Divider sx={{ my: 1, borderColor: '#F3F4F6' }} />
+                      <MenuItem 
+                        component={Link} 
+                        to="/profile" 
+                        sx={{ p: 1, borderRadius: '6px', mb: 0.5, transition: 'all 0.1s', '&:hover': { bgcolor: '#F3F4F6' } }}
+                      >
+                        <Box sx={{ color: '#4B5563', mr: 1.5, display: 'flex', alignItems: 'center' }}><ManageAccountsIcon fontSize="small" /></Box>
+                        <Typography fontWeight={500} fontSize="0.85rem" sx={{ color: '#111827' }}>Pengaturan Profil</Typography>
+                      </MenuItem>
+                      <MenuItem 
+                        onClick={logout} 
+                        sx={{ p: 1, borderRadius: '6px', transition: 'all 0.1s', '&:hover': { bgcolor: '#F3F4F6' } }}
+                      >
+                        <Box sx={{ color: '#4B5563', mr: 1.5, display: 'flex', alignItems: 'center' }}><LogoutIcon fontSize="small" /></Box>
+                        <Typography fontWeight={500} fontSize="0.85rem" sx={{ color: '#111827' }}>Keluar Akun</Typography>
+                      </MenuItem>
+                    </MenuList>
                   </Box>
-                  <Divider sx={{ my: 1, borderColor: '#F3F4F6' }} />
-                  <MenuItem 
-                    component={Link}
-                    to="/profile"
-                    onClick={handleProfileClose}
-                    sx={{ 
-                      py: 1.5, 
-                      px: 2, 
-                      borderRadius: '10px', 
-                      mx: 1, 
-                      mb: 0.5,
-                      color: '#111827',
-                      transition: 'all 0.2s',
-                      '&:hover': { bgcolor: '#F3F4F6' }
-                    }}
-                  >
-                    <ListItemIcon><ManageAccountsIcon fontSize="small" sx={{ color: 'inherit' }} /></ListItemIcon>
-                    <Typography fontWeight={600} fontSize="0.95rem">Pengaturan Profil</Typography>
-                  </MenuItem>
-                  <MenuItem 
-                    onClick={handleLogout} 
-                    sx={{ 
-                      py: 1.5, 
-                      px: 2, 
-                      borderRadius: '10px', 
-                      mx: 1, 
-                      mb: 0.5,
-                      color: '#EF4444',
-                      transition: 'all 0.2s',
-                      '&:hover': { bgcolor: '#FEF2F2', color: '#DC2626' }
-                    }}
-                  >
-                    <ListItemIcon><LogoutIcon fontSize="small" sx={{ color: 'inherit' }} /></ListItemIcon>
-                    <Typography fontWeight={600} fontSize="0.95rem">Keluar Akun</Typography>
-                  </MenuItem>
-                </Menu>
-              </>
+                )}
+              </Box>
             ) : (
               <Box sx={{ display: 'flex', gap: 1.5 }}>
                 <Button 

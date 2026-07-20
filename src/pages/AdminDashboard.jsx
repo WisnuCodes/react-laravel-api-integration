@@ -4,7 +4,7 @@ import {
   Tabs, Tab, Table, TableBody, TableCell, TableContainer, 
   TableHead, TableRow, Dialog, DialogTitle, DialogContent, 
   DialogContentText, DialogActions, Button, Snackbar, Alert, Stack,
-  Divider, TextField
+  Divider, TextField, MenuItem
 } from '@mui/material';
 import PeopleIcon from '@mui/icons-material/People';
 import StorefrontIcon from '@mui/icons-material/Storefront';
@@ -687,11 +687,10 @@ export default function AdminDashboard() {
             value={userDialog.role}
             onChange={(e) => setUserDialog({ ...userDialog, role: e.target.value })}
             InputProps={{ sx: { borderRadius: '12px' } }}
-            SelectProps={{ native: true }}
           >
-            <option value="buyer">Buyer</option>
-            <option value="seller">Seller</option>
-            <option value="admin">Admin</option>
+            <MenuItem value="buyer">Buyer</MenuItem>
+            <MenuItem value="seller">Seller</MenuItem>
+            <MenuItem value="admin">Admin</MenuItem>
           </TextField>
           <TextField
             fullWidth

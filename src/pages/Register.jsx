@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+// import { useAuth } from '../context/AuthContext';
 import { apiRequest } from '../api/client';
 import { Box, Button, TextField, Typography, Alert, InputAdornment, IconButton, CircularProgress, MenuItem, Divider, Checkbox, FormControlLabel } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Logo from '../components/atoms/Logo';
 
 export default function Register() {
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
@@ -37,8 +36,7 @@ export default function Register() {
       });
 
       if (response.success) {
-        login(response.data.access_token, response.data.user);
-        navigate('/');
+        navigate('/verify-otp', { state: { email: email } });
       } else {
         setError(response.message || 'Registrasi gagal.');
       }

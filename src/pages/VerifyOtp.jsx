@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
-import TechIcons from '../components/atoms/TechIcons';
+import Logo from '../components/atoms/Logo';
 
 export default function VerifyOtp() {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -154,7 +154,7 @@ export default function VerifyOtp() {
           }}
         >
           <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center' }}>
-            <TechIcons type="dibitech" />
+            <Logo color="#0F172A" />
           </Box>
 
           <Typography variant="h4" fontWeight={800} color="#0F172A" sx={{ mb: 1, letterSpacing: '-0.5px' }}>

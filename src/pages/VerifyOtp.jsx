@@ -32,13 +32,6 @@ export default function VerifyOtp() {
   }, [email, navigate]);
 
   useEffect(() => {
-    if (autoOtp && typeof autoOtp === 'string' && autoOtp.length === 6) {
-      setOtp(autoOtp.split(''));
-      setSuccess(`SIMULASI EMAIL OTP: Karena server SMTP diblokir di Railway, kode OTP Anda (${autoOtp}) telah diisi secara otomatis untuk kemudahan presentasi/testing!`);
-    }
-  }, [autoOtp]);
-
-  useEffect(() => {
     let timer;
     if (countdown > 0) {
       timer = setInterval(() => {
